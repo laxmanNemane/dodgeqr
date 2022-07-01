@@ -1,69 +1,70 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { API_URL, Auth_token } from '../../commen/API';
-import SidebarNav from '../../Components/SidebarNav'
+import axios from "axios";
+import React, { useContext, useEffect } from "react";
+import Index from "../../HOC_Component/Index";
+import UserContext from "../../useContext/Context";
+import AddMessages from "./PopupBoxes/AddMessages";
 
-const MeassageList = ({authtoken}) => {
-  const [messages, SetMessage] = useState([])
+const MeassageList = () => {
+  const { token , messageslist ,setMessageList} = useContext(UserContext);
 
-  // let token = localStorage.getItem("token")
-  //   console.log(token)
+  // console.log(token);
+  // console.log(flag);
+
+
+
   useEffect(() => {
-    axios.get(`${API_URL}/message-list`, {
-      headers: {
-        'Authorization': authtoken,
-        'Content-Type': 'application/json',
-      },
-
-    }).then((res) => {
-      SetMessage(res.data);
-    })
-      .catch((error) => {
-        console.error(error)
+    axios
+      .get("https://dodgeqr.prometteur.in/api/message-list", {
+        headers: {
+          Authorization: token,
+        },
       })
+      .then((res) => {
+        setMessageList(res.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [token ,setMessageList]);
 
+  console.log(messageslist)
 
-  },[])
-
-  // console.log(Auth_token)
-
-
-
-  console.log(messages)
   return (
     <>
-      <div>
-        <SidebarNav />
-      </div>
-      <div className='ap-com container-main ms-auto me-5' style={{ width: "80%" }}>
-        <div className="ap-com sm-com-heading mb-4 text-start">
-          <h5 className='pt-4'>Manage Messages List</h5>
+      <div className="ap-com  ms-5 ">
+      <div className="d-flex">
+          <div className="ap-com sm-com-heading me-auto   text-start">
+            <p className="pt-4">Manage Messages</p>
+          </div>
+          <div className="my-3 me-5">
+            <AddMessages />
+          </div>
         </div>
-        <div className="ap-com table-panel table-responsive">
+        <div className="ap-com table-panel ">
           <table className="table table-bordered">
             <thead>
               <tr>
-                <th scope="col" width="20%">Id</th>
-                <th scope="col" width="80%">Message</th>
-                <th scope='col' width="20%">Action</th>
+                <th scope="col" width="20%">
+                  Id
+                </th>
+                <th scope="col" width="80%">
+                  Message
+                </th>
+                <th scope="col" width="20%">
+                  Action
+                </th>
               </tr>
             </thead>
-            {messages && messages.map((message, index) => {
+            {messageslist.map((message, index) => {
               return (
                 <tbody key={index}>
                   <tr>
-                    <td>
-                      {index + 1}
-                    </td>
-                    <td>
-                      {message.message}
-                    </td>
-
+                    <td>{index + 1}</td>
+                    <td>{message.message}</td>
                     <td>
                       <div className="action-div dropdown">
                         <button
                           className="border-none"
-
                           id="dropdownMenuButton1"
                           data-bs-toggle="dropdown"
                           aria-expanded="false"
@@ -76,17 +77,17 @@ const MeassageList = ({authtoken}) => {
                           aria-labelledby="dropdownMenuButton1"
                         >
                           <li>
-                            <a className="dropdown-item" href="#">
+                            <a className="dropdown-item" href="/">
                               <i className="fas fa-eye"></i> View
                             </a>
                           </li>
                           <li>
-                            <a className="dropdown-item" href="#">
+                            <a className="dropdown-item" href="/">
                               <i className="fas fa-pencil-alt"></i> Update
                             </a>
                           </li>
                           <li>
-                            <a className="dropdown-item" href="#">
+                            <a className="dropdown-item" href="/">
                               <i className="fas fa-trash-alt"></i> Delete
                             </a>
                           </li>
@@ -95,16 +96,15 @@ const MeassageList = ({authtoken}) => {
                     </td>
                   </tr>
                 </tbody>
-              )
+              );
             })}
-
-            
-
           </table>
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default MeassageList
+const Messages = Index(MeassageList);
+
+export default Messages;

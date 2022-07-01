@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from "../Components/Navbar";
 // import axios from "axios"
@@ -60,10 +60,9 @@ const SignUp = () => {
     return (
         <>
             <Navbar />
-
             <div className=" signup pt-5">
 
-                <div className="container pt-5">
+                <div className="container pt-5 text-center">
                     <div className="row">
                         <div className="col-lg-2 col-md-2 col-sm-1"></div>
                         <div className="col-lg-8 col-md-8 col-sm-10 card py-4 px-5 bg-dark  text-white" style={{ borderRadius: "20px" }}>

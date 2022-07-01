@@ -3,10 +3,9 @@ import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import UserContext from "../useContext/Context";
-// import { API_URL } from "../commen/API";
 
 const LoginPage = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, flag, setAdmin } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -21,18 +20,20 @@ const LoginPage = () => {
   };
 
   const Login = async () => {
-    console.log(user);
+    // console.log(user);
     try {
       console.log("before api hit");
       let result = await axios.post(
         `https://dodgeqr.prometteur.in/api/admin/login`,
         user
       );
-      console.log(result.data);
+      setAdmin(result.data.user);
 
       localStorage.setItem("token", result.data.token);
+      localStorage.setItem("user", JSON.stringify(result.data.user));
+
       console.log(result.data.token);
-      navigate("/dashboard");
+      navigate("/dashbord");
 
       alert("login Succesfully");
     } catch (error) {
@@ -40,6 +41,7 @@ const LoginPage = () => {
     }
   };
 
+  console.log(flag);
   const Submit = (e) => {
     e.preventDefault();
     // console.log(user);
@@ -53,7 +55,7 @@ const LoginPage = () => {
   return (
     <>
       <Navbar />
-      <div className="container pt-5">
+      <div className="container pt-5 text-center">
         <div
           className="card mt-5 w-50 mx-auto py-5 bg-dark  "
           style={{ borderRadius: "25px" }}

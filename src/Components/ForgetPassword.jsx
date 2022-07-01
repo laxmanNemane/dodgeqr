@@ -25,7 +25,7 @@ const ForgetPassword = () => {
 
 
             <div className="text-center text-white">
-              <Link to="/login" className='text-decoration-none'><p className="text-white">Back To login&nbsp; &nbsp;<i class="fas fa-chevron-right "></i></p></Link>
+              <Link to="/login" className='text-decoration-none'><p className="text-white">Back To login&nbsp; &nbsp;<i className="fas fa-chevron-right "></i></p></Link>
 
             </div>
           </form>
