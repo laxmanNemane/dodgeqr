@@ -7,7 +7,7 @@ import AddSubcategory from "./PopupBoxes/AddSubcategory";
 const SubCategories = () => {
   const { token, category, setCategory } = useContext(UserContext);
 
-  console.log(category);
+  // console.log(category);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -61,7 +61,7 @@ const SubCategories = () => {
     setIsModalVisible(true);
   };
 
-  console.log(category);
+  // console.log(category);
 
   return (
     <>
@@ -99,46 +99,50 @@ const SubCategories = () => {
                   <th></th>
                 </tr>
               </thead>
-              {category.map((element, index) => {
-                return (
-                  <tbody key={index}>
-                    <tr>
-                      <td>{element.title}</td>
-                      <td>
-                        {element.category === 1 ? "Movable" : "Immovable"}
-                      </td>
-                      <td>
-                        {element.messages_id.map((m) => m.message).join(", ")}
-                      </td>
+              {category &&
+                category.map((element, index) => {
+                  return (
+                    <tbody key={index}>
+                      <tr>
+                        <td>{element.title}</td>
+                        <td>
+                          {element.category === 1 ? "Movable" : "Immovable"}
+                        </td>
+                        <td>
+                          {element.messages_id.map((m) => m.message).join(", ")}
+                        </td>
 
-                      <td>
-                        <div className="action-div dropdown">
-                          <button
-                            className=""
-                            id="dropdownMenuButton1"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                            style={{ border: "none" }}
-                          >
-                            <i className="fas fa-ellipsis-v"></i>
-                          </button>
-                          <ul
-                            className="dropdown-menu"
-                            aria-labelledby="dropdownMenuButton1"
-                          >
-                            <li onClick={() => onUpdate(element._id, element)}>
-                              <i className="fas fa-pencil-alt mx-2"></i> Update
-                            </li>
-                            <li onClick={() => onDelete(element._id)}>
-                              <i className="fas fa-trash-alt mx-2"></i> Delete
-                            </li>
-                          </ul>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                );
-              })}
+                        <td>
+                          <div className="action-div dropdown">
+                            <button
+                              className=""
+                              id="dropdownMenuButton1"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                              style={{ border: "none" }}
+                            >
+                              <i className="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul
+                              className="dropdown-menu"
+                              aria-labelledby="dropdownMenuButton1"
+                            >
+                              <li
+                                onClick={() => onUpdate(element._id, element)}
+                              >
+                                <i className="fas fa-pencil-alt mx-2"></i>{" "}
+                                Update
+                              </li>
+                              <li onClick={() => onDelete(element._id)}>
+                                <i className="fas fa-trash-alt mx-2"></i> Delete
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  );
+                })}
             </table>
           </div>
         </div>

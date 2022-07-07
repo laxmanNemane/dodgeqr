@@ -4,16 +4,20 @@ import { Modal } from "react-bootstrap";
 import { AiOutlineClose } from "react-icons/ai";
 import UserContext from "../../../useContext/Context";
 
-const AddMessages = () => {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+const AddMessages = ({ show, setShow, id, element }) => {
+  // const [show, setShow] = useState(false);
+  const handleClose = () => {
+    setMessage("")
+    setShow(false);
+  }
   const handleShow = () => setShow(true);
   const [message, setMessage] = useState("");
 
-  const { token , messageslist ,setMessageList} = useContext(UserContext);
+  const { token } = useContext(UserContext);
+
   // console.log(token);
 
-  const AddMessage = () => {
+  const postMessage = () => {
     axios
       .post(
         "https://dodgeqr.prometteur.in/api/message",
@@ -25,13 +29,46 @@ const AddMessages = () => {
         }
       )
       .then((res) => {
-        setMessageList([...messageslist, res.data]);
+        // setMessageList([...messageslist, res.data]);
+        console.log(res.data);
+       
       })
       .catch((err) => {
         console.log("err", err);
       });
-    handleClose();
-    setMessage("");
+      setMessage("");
+      handleClose();
+  };
+
+  const UpdateMessage = () => {
+    axios
+      .patch(
+        `https://dodgeqr.prometteur.in/api/message/${id}`,
+        { message: message },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        // setMessageList([...messageslist, res.data]);
+        console.log(res.data);
+    
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+      setMessage("");
+      handleClose();
+  };
+
+  const AddMessage = () => {
+    if (!id) {
+      postMessage();
+    } else {
+      UpdateMessage();
+    }
   };
 
   // console.log(messageslist);
@@ -45,33 +82,64 @@ const AddMessages = () => {
 
       {/* modal body */}
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header>
-          <h5>Add Message</h5>
-          <AiOutlineClose className="mb-2 fw-bold" onClick={handleClose} />
-        </Modal.Header>
-        <Modal.Body>
-          <form>
-            <label className="py-1"> &nbsp; Message: </label>
-            <input
-              className="form-control mb-3"
-              type="text"
-              name="message"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="write Message here"
-              autoFocus
-              required
-            />
-          </form>
-          <button className="btn btn-outline-success me-2" onClick={AddMessage}>
-            Add Message
-          </button>
-          <button className="btn btn-outline-warning" onClick={handleClose}>
-            Cancel
-          </button>
-        </Modal.Body>
-      </Modal>
+      {!id ? (
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header>
+            <h5>Add Message</h5>
+            <AiOutlineClose className="mb-2 fw-bold" onClick={handleClose} />
+          </Modal.Header>
+          <Modal.Body>
+            <form>
+              <label className="py-1"> &nbsp; Message: </label>
+              <input
+                className="form-control mb-3"
+                type="text"
+                name="message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="write Message here"
+                autoFocus
+                required
+              />
+            </form>
+            <button
+              className="btn btn-outline-success me-2"
+              onClick={AddMessage}
+            >
+              Add Message
+            </button>
+         
+          </Modal.Body>
+        </Modal>
+      ) : (
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header>
+            <h5>Add Message</h5>
+            <AiOutlineClose className="mb-2 fw-bold" onClick={handleClose} />
+          </Modal.Header>
+          <Modal.Body>
+            <form>
+              <label className="py-1"> &nbsp; Message: </label>
+              <input
+                className="form-control mb-3"
+                type="text"
+                name="message"
+                defaultValue={element.message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="write Message here"
+                autoFocus
+                required
+              />
+            </form>
+            <button
+              className="btn btn-outline-success me-2"
+              onClick={AddMessage}
+            >
+              Update Message
+            </button>
+          </Modal.Body>
+        </Modal>
+      )}
     </>
   );
 };

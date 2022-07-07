@@ -21,11 +21,10 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
 
   const [newonesubcategory, setNewOneSubCategory] = useState({
     title: "",
-    category1: "",
+    Category: "",
   });
 
-  const { token, messageslist, setCategory, setMessageList } =
-    useContext(UserContext);
+  const { token, messageslist, setMessageList } = useContext(UserContext);
 
   // console.log(token);
   // console.log(flag);
@@ -54,21 +53,23 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
     });
   };
 
-  const handleSelectChange = (value) => {
-    setOne(value);
+  const handleSelectChange = (values) => {
+    setOne(values);
+    // console.log(values)
   };
 
-  console.log(one);
+  // console.log(one);
 
-  console.log(messageslist);
+  // console.log(messageslist);
 
   const postSubcategory = () => {
+    console.log("one", one);
     axios
       .post(
         "https://dodgeqr.prometteur.in/api/subcategory",
         {
           title: newonesubcategory.title,
-          category: newonesubcategory.category1,
+          category: newonesubcategory.Category,
           messages_id: one,
         },
         {
@@ -78,24 +79,37 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
         }
       )
       .then((res) => {
-        setCategory(res.data);
+        // setCategory([...category, res.data]);
+
         handleCancel();
+        setNewOneSubCategory("");
+        setOne("");
+
         console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-    setNewOneSubCategory("");
-    setOne("");
   };
 
   const updateSubcategory = (data, id) => {
+    console.log("update one", one);
+    console.log("update newsubcategory one", newonesubcategory);
+
+    // console.log(data)
+
+    // console.log(element.title)
+    // console.log(element.category)
+    // console.log(element.messages_id.map((ele)=>ele._id))
+
+    // console.log([data , newonesubcategory , one])
+
     axios
       .patch(
         `https://dodgeqr.prometteur.in/api/subcategory/${id}`,
         {
           title: newonesubcategory.title,
-          category: newonesubcategory.category1,
+          category: newonesubcategory.Category,
           messages_id: one,
         },
         {
@@ -105,14 +119,14 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
         }
       )
       .then((res) => {
-        setCategory(res.data);
+        console.log(res.data);
+        handleCancel();
+        setNewOneSubCategory("");
+        setOne("");
       })
       .catch((err) => {
         console.log(err);
       });
-    handleCancel();
-    setNewOneSubCategory("");
-    setOne("");
   };
 
   const handleSubmit = (e) => {
@@ -124,13 +138,14 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
       updateSubcategory(element, id);
     }
   };
-  console.log(newonesubcategory);
+  // console.log(newonesubcategory);
 
   return (
     <>
-      <Button onClick={showModal}>click me</Button>
+      <Button onClick={showModal}>Add New Subcategory</Button>
       {!id ? (
         <Modal
+        footer={null}
           title="Add Subcategory "
           visible={isModalVisible}
           onOk={handleOk}
@@ -155,8 +170,8 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
             <br />
             <Radio.Group
               onChange={handleChange}
-              name="category1"
-              value={newonesubcategory.category1}
+              name="Category"
+              value={newonesubcategory.Category}
             >
               <Radio value={1}>Movable</Radio>
               <Radio value={2}>Immovable</Radio>
@@ -168,21 +183,21 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
             {/* select multi */}
             <label>Message</label>
             <Select
-              className="control-form"
-              mode="tags"
+              mode="multiple"
               allowClear
               placeholder="Please select"
               style={{ width: "100%" }}
               onChange={handleSelectChange}
               tokenSeparators={[","]}
             >
-              {messageslist.map((ele, index) => {
-                return (
-                  <Option key={index} value={ele._id}>
-                    {ele.message}
-                  </Option>
-                );
-              })}
+              {messageslist &&
+                messageslist.map((ele, index) => {
+                  return (
+                    <Option key={index} value={ele._id}>
+                      {ele.message}
+                    </Option>
+                  );
+                })}
             </Select>
 
             <br />
@@ -200,6 +215,7 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
         </Modal>
       ) : (
         <Modal
+        footer={null}
           title="Add Subcategory "
           visible={isModalVisible}
           onOk={handleOk}
@@ -223,7 +239,11 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
             {/* movable or immovable */}
             <label>Category</label>
             <br />
-            <Radio.Group onChange={handleChange} value={element.category}>
+            <Radio.Group
+              name="Category"
+              onChange={handleChange}
+              defaultValue={element.category}
+            >
               <Radio value={1}>Movable</Radio>
               <Radio value={2}>Immovable</Radio>
             </Radio.Group>
@@ -234,11 +254,14 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
             {/* select multi */}
             <label>Message</label>
             <Select
-              className="control-form"
-              mode="tags"
+              mode="multiple"
               allowClear
               defaultValue={element.messages_id.map((ele) => {
-                return <Option key={ele.message}>{ele.message}</Option>;
+                return (
+                  <Option key={ele._id} values={ele._id}>
+                    {ele._id}
+                  </Option>
+                );
               })}
               placeholder="Please select"
               style={{ width: "100%" }}
@@ -247,7 +270,7 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
             >
               {messageslist.map((ele, index) => {
                 return (
-                  <Option key={index} value={ele.message}>
+                  <Option key={index} value={ele._id}>
                     {ele.message}
                   </Option>
                 );
