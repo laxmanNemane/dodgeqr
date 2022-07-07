@@ -1,25 +1,35 @@
-import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { Modal } from "react-bootstrap";
-import { AiOutlineClose } from "react-icons/ai";
-
-import Select from "react-select";
+import { Button, Form, Input, Modal, Radio, Select } from "antd";
+import { CheckCircleTwoTone } from "@ant-design/icons";
+import axios from "axios";
 import UserContext from "../../../useContext/Context";
+const { Option } = Select;
 
-const AddSubcategory = ({ category, setCategory }) => {
-  // modal functioanlity
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
+  const showModal = () => {
+    // console.log("clicked");
+    setIsModalVisible(true);
+  };
 
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
 
-  const { token, messageslist, setMessageList } = useContext(UserContext);
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
-  const [newsubcategory, setNewSubcategory] = useState({
+  const [newonesubcategory, setNewOneSubCategory] = useState({
     title: "",
     category1: "",
   });
 
-  ///api call for Messagaes which is used in input box
+  const { token, messageslist, setCategory, setMessageList } =
+    useContext(UserContext);
+
+  // console.log(token);
+  // console.log(flag);
+
   useEffect(() => {
     axios
       .get("https://dodgeqr.prometteur.in/api/message-list", {
@@ -35,34 +45,31 @@ const AddSubcategory = ({ category, setCategory }) => {
       });
   }, [token, setMessageList]);
 
-  const handleShow = () => {
-    setShow(true);
-  };
-
-  //getting message here
-  const [displayValue, getDisplayvalue] = useState();
+  const [one, setOne] = useState();
 
   const handleChange = (e) => {
-    getDisplayvalue(Array.isArray(e) ? e.map((x) => x.value) : []);
+    setNewOneSubCategory({
+      ...newonesubcategory,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleInput = (e) => {
-    const newData = { ...newsubcategory };
-    newData[e.target.name] = e.target.value;
-    setNewSubcategory(newData);
+  const handleSelectChange = (value) => {
+    setOne(value);
   };
 
+  console.log(one);
 
-  const AddNewSubCategory = (e) => {
-    console.log(displayValue);
-    e.preventDefault();
+  console.log(messageslist);
+
+  const postSubcategory = () => {
     axios
       .post(
         "https://dodgeqr.prometteur.in/api/subcategory",
         {
-          title: newsubcategory.title,
-          category: newsubcategory.category1,
-          messages_id: displayValue,
+          title: newonesubcategory.title,
+          category: newonesubcategory.category1,
+          messages_id: one,
         },
         {
           headers: {
@@ -71,79 +78,196 @@ const AddSubcategory = ({ category, setCategory }) => {
         }
       )
       .then((res) => {
-        setCategory([...category, res.data]);
+        setCategory(res.data);
+        handleCancel();
         console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-    handleClose();
-    setNewSubcategory("");
-   
+    setNewOneSubCategory("");
+    setOne("");
   };
+
+  const updateSubcategory = (data, id) => {
+    axios
+      .patch(
+        `https://dodgeqr.prometteur.in/api/subcategory/${id}`,
+        {
+          title: newonesubcategory.title,
+          category: newonesubcategory.category1,
+          messages_id: one,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        setCategory(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    handleCancel();
+    setNewOneSubCategory("");
+    setOne("");
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!id) {
+      postSubcategory();
+    } else {
+      updateSubcategory(element, id);
+    }
+  };
+  console.log(newonesubcategory);
 
   return (
     <>
-      <button className="btn btn-outline-primary" onClick={handleShow}>
-        Add sub-Category
-      </button>
-
-      {/* modal body */}
-
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header>
-          <h5>Subcategory messages</h5>
-          <AiOutlineClose className="mb-2 fw-bold" onClick={handleClose} />
-        </Modal.Header>
-        <Modal.Body>
-          <form>
-            <label className="py-1 fw-bold"> &nbsp; Title: </label>
-            <input
-              className="form-control mb-3"
-              type="text"
+      <Button onClick={showModal}>click me</Button>
+      {!id ? (
+        <Modal
+          title="Add Subcategory "
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <Form>
+            {/* title */}
+            <label>Title</label>
+            <Input
+              placeholder="Basic usage"
+              className="form-control"
               name="title"
-              value={newsubcategory.title}
-              onChange={(e) => handleInput(e)}
-              placeholder="write title here"
-              required
-            />
-
-            <label className="py-1 fw-bold"> &nbsp; Category:</label>
-            <input
-              className="form-control mb-3"
-              type="number"
-              name="category1"
-              value={newsubcategory.category1}
-              onChange={(e) => handleInput(e)}
-              placeholder="write title here"
-              required
-            />
-
-            <label className="py-2 fw-bold"> &nbsp; Messages: </label>
-
-            <Select
-              isMulti
-              //   value={selectedOption}
+              value={newonesubcategory.title}
               onChange={handleChange}
-              options={messageslist.map((guest, index) => {
-                return {
-                  value: guest._id,
-                  label: guest.message,
-                  key: index,
-                };
-              })}
             />
-            <div className="text-center my-2">
-              <button
-                className="btn btn-outline-success "
-                onClick={AddNewSubCategory}
-              >
-                Add categories list
-              </button>
-            </div>
-          </form>
-        </Modal.Body>
-      </Modal>
+
+            <br />
+            <br />
+
+            {/* movable or immovable */}
+            <label>Category</label>
+            <br />
+            <Radio.Group
+              onChange={handleChange}
+              name="category1"
+              value={newonesubcategory.category1}
+            >
+              <Radio value={1}>Movable</Radio>
+              <Radio value={2}>Immovable</Radio>
+            </Radio.Group>
+
+            <br />
+            <br />
+
+            {/* select multi */}
+            <label>Message</label>
+            <Select
+              className="control-form"
+              mode="tags"
+              allowClear
+              placeholder="Please select"
+              style={{ width: "100%" }}
+              onChange={handleSelectChange}
+              tokenSeparators={[","]}
+            >
+              {messageslist.map((ele, index) => {
+                return (
+                  <Option key={index} value={ele._id}>
+                    {ele.message}
+                  </Option>
+                );
+              })}
+            </Select>
+
+            <br />
+            <br />
+
+            <button
+              placeholder="Add New"
+              type="btn"
+              className="btn btn-outline-success  px-3 w-100"
+              onClick={handleSubmit}
+            >
+              Add New Category <CheckCircleTwoTone />
+            </button>
+          </Form>
+        </Modal>
+      ) : (
+        <Modal
+          title="Add Subcategory "
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          {/*  */}
+          <Form>
+            {/* title */}
+            <label>Title</label>
+            <Input
+              placeholder="Basic usage"
+              className="form-control"
+              name="title"
+              defaultValue={element.title}
+              onChange={(e) => handleChange(e)}
+            />
+
+            <br />
+            <br />
+
+            {/* movable or immovable */}
+            <label>Category</label>
+            <br />
+            <Radio.Group onChange={handleChange} value={element.category}>
+              <Radio value={1}>Movable</Radio>
+              <Radio value={2}>Immovable</Radio>
+            </Radio.Group>
+
+            <br />
+            <br />
+
+            {/* select multi */}
+            <label>Message</label>
+            <Select
+              className="control-form"
+              mode="tags"
+              allowClear
+              defaultValue={element.messages_id.map((ele) => {
+                return <Option key={ele.message}>{ele.message}</Option>;
+              })}
+              placeholder="Please select"
+              style={{ width: "100%" }}
+              onChange={handleSelectChange}
+              tokenSeparators={[","]}
+            >
+              {messageslist.map((ele, index) => {
+                return (
+                  <Option key={index} value={ele.message}>
+                    {ele.message}
+                  </Option>
+                );
+              })}
+            </Select>
+
+            <br />
+            <br />
+
+            <button
+              placeholder="Add New"
+              type="btn"
+              className="btn btn-outline-success  px-3 w-100"
+              onClick={handleSubmit}
+            >
+              Update
+            </button>
+          </Form>
+        </Modal>
+      )}
     </>
   );
 };

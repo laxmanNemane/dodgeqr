@@ -8,9 +8,12 @@ const UseContext = (props) => {
   });
 
   // messaeg
-  
+
   const [messageslist, setMessageList] = useState([]);
-  console.log(messageslist)
+  // console.log(messageslist)
+
+  //subcategory
+  const [category, setCategory] = useState([]);
 
   // admin
 
@@ -19,11 +22,11 @@ const UseContext = (props) => {
   // token
   const token = localStorage.getItem("token");
 
-  console.log(admin);
+  // console.log(admin);
   // flag
   const [flag, setFlag] = useState(admin ? true : false);
 
-  console.log(flag);
+  // console.log(flag);
 
   // console.log(user);
   return (
@@ -37,7 +40,9 @@ const UseContext = (props) => {
         setFlag,
         token,
         messageslist,
-        setMessageList
+        setMessageList,
+        category,
+        setCategory,
       }}
     >
       {props.children}

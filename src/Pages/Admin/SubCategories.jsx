@@ -5,12 +5,20 @@ import UserContext from "../../useContext/Context";
 import AddSubcategory from "./PopupBoxes/AddSubcategory";
 
 const SubCategories = () => {
-  const { token} = useContext(UserContext);
+  const { token, category, setCategory } = useContext(UserContext);
 
-  // console.log(token);
-  const [category, setCategory] = useState([]);
+  console.log(category);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const [id, setId] = useState();
+  const [element, setElement] = useState();
 
   useEffect(() => {
+    getCategories();
+  }, [isModalVisible]);
+
+  const getCategories = () => {
     axios
       .get("https://dodgeqr.prometteur.in/api/subcategory", {
         headers: {
@@ -23,9 +31,37 @@ const SubCategories = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, [token]);
+  };
 
-  console.log(category)
+  const onDelete = (id) => {
+    if (
+      window.confirm(
+        "Are you sure that tou wanted to delete that categories  record "
+      )
+    ) {
+      axios
+        .delete(`https://dodgeqr.prometteur.in/api/subcategory/${id}`, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          getCategories();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  const onUpdate = (id, data) => {
+    setId(id);
+    setElement(data);
+    setIsModalVisible(true);
+  };
+
+  console.log(category);
 
   return (
     <>
@@ -36,10 +72,15 @@ const SubCategories = () => {
               <p className="pt-4">Manage Subcategory</p>
             </div>
             <div className="my-3 me-5">
-              <AddSubcategory  category={category} setCategory={setCategory}/>
+              <AddSubcategory
+                isModalVisible={isModalVisible}
+                setIsModalVisible={setIsModalVisible}
+                id={id}
+                element={element}
+              />
             </div>
-          </div> 
-          <div className="ap-com table-panel table-responsive">
+          </div>
+          <div className="ap-com table-panel table">
             <table className="table table-bordered">
               <thead>
                 <tr>
@@ -63,8 +104,12 @@ const SubCategories = () => {
                   <tbody key={index}>
                     <tr>
                       <td>{element.title}</td>
-                      <td>{element.category}</td>
-                      <td>{element.messages_id.map((m) => m.message).join(', ')}</td>
+                      <td>
+                        {element.category === 1 ? "Movable" : "Immovable"}
+                      </td>
+                      <td>
+                        {element.messages_id.map((m) => m.message).join(", ")}
+                      </td>
 
                       <td>
                         <div className="action-div dropdown">
@@ -81,33 +126,11 @@ const SubCategories = () => {
                             className="dropdown-menu"
                             aria-labelledby="dropdownMenuButton1"
                           >
-                            <li>
-                              <a className="dropdown-item" href="/">
-                                <i className="fas fa-check"></i> Active
-                              </a>
+                            <li onClick={() => onUpdate(element._id, element)}>
+                              <i className="fas fa-pencil-alt mx-2"></i> Update
                             </li>
-                            <li>
-                              <a className="dropdown-item" href="/">
-                                <i className="fas fa-ban"></i> Deactive
-                              </a>
-                            </li>
-                            <li>
-                              <hr className="dropdown-divider" />
-                            </li>
-                            <li>
-                              <a className="dropdown-item" href="/">
-                                <i className="fas fa-info"></i> Show
-                              </a>
-                            </li>
-                            <li>
-                              <a className="dropdown-item" href="/">
-                                <i className="fas fa-pencil-alt"></i> Update
-                              </a>
-                            </li>
-                            <li>
-                              <a className="dropdown-item" href="/">
-                                <i className="fas fa-trash-alt"></i> Delete
-                              </a>
+                            <li onClick={() => onDelete(element._id)}>
+                              <i className="fas fa-trash-alt mx-2"></i> Delete
                             </li>
                           </ul>
                         </div>

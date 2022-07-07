@@ -4,20 +4,18 @@ import { Modal } from "react-bootstrap";
 import { AiOutlineClose } from "react-icons/ai";
 import UserContext from "../../../useContext/Context";
 
-const AddPackages = ({managePackage , setManagePackage}) => {
-
-    // modal functioanlity
+const AddPackages = ({ managePackage, setManagePackage }) => {
+  // modal functioanlity
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   //geting token from global store
-  const { token   } = useContext(UserContext);
+  const { token } = useContext(UserContext);
 
-//   console.log(token);
+  //   console.log(token);
 
-
-//the is new package initial state
+  //the is new package initial state
   const [newpackage, setNewPackage] = useState({
     title: "",
     description: "",
@@ -26,8 +24,7 @@ const AddPackages = ({managePackage , setManagePackage}) => {
     it_call: "",
   });
 
-
-//geting input values
+  //geting input values
   const HandleChange = (e) => {
     const newData = { ...newpackage };
     newData[e.target.name] = e.target.value;
@@ -43,10 +40,7 @@ const AddPackages = ({managePackage , setManagePackage}) => {
     setNewPackage(newData);
   };
 
-
-
-
-//   ADD new package API
+  //   ADD new package API
   const AddNewPackage = (e) => {
     e.preventDefault();
     axios
@@ -56,7 +50,7 @@ const AddPackages = ({managePackage , setManagePackage}) => {
         },
       })
       .then((res) => {
-        setManagePackage([...managePackage ,res.data]);
+        setManagePackage([...managePackage, res.data]);
         console.log(token);
       })
       .catch((err) => {
@@ -67,8 +61,8 @@ const AddPackages = ({managePackage , setManagePackage}) => {
     alert("package add Successfully");
   };
 
-//   console.log(newpackage);
-//   console.log(managePackage);
+  //   console.log(newpackage);
+  //   console.log(managePackage);
 
   return (
     <>

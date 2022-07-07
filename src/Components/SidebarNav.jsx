@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 import UserContext from "../useContext/Context";
 
 const SidebarNav = () => {
-  const token = useContext(UserContext);
+  const {token} = useContext(UserContext);
+
+  
 
   const navigate = useNavigate();
 

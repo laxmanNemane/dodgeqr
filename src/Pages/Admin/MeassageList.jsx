@@ -27,7 +27,7 @@ const MeassageList = () => {
       });
   }, [token ,setMessageList]);
 
-  console.log(messageslist)
+  // console.log(messageslist)
 
   return (
     <>

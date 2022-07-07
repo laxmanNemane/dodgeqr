@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import 'antd/dist/antd.css';
 import Packages from "./Pages/Admin/ManagePakages";
 import Users from "./Pages/Admin/ManageUsers";
 import BoxDashbord from "./Pages/Admin/MainDashbord";

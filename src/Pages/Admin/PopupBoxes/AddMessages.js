@@ -34,8 +34,8 @@ const AddMessages = () => {
     setMessage("");
   };
 
-  console.log(messageslist);
-  console.log(message);
+  // console.log(messageslist);
+  // console.log(message);
 
   return (
     <>
