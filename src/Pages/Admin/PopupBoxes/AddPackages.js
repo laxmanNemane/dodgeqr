@@ -50,45 +50,45 @@ const AddPackages = ({
 
   const PostPackage = () => {
     console.log(newpackage)
-    axios
-      .post("https://dodgeqr.prometteur.in/api/admin/package", newpackage, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        // setManagePackage(res.data);
-        console.log(token);
-      })
-      .catch((err) => {
-        console.log(err);
-        console.log(token);
-      });
-    handleClose();
+    // axios
+    //   .post("https://dodgeqr.prometteur.in/api/admin/package", newpackage, {
+    //     headers: {
+    //       Authorization: token,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     // setManagePackage(res.data);
+    //     console.log(token);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     console.log(token);
+    //   });
+    // handleClose();
   };
 
   const UpdatePackage = (id) => {
     console.log(newpackage)
-    axios
-    .patch(
-      `https://dodgeqr.prometteur.in/api/admin/package/${id}`,
-      newpackage,
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    )
-    .then((res) => {
-      // setMessageList([...messageslist, res.data]);
-      console.log(res.data);
-      handleClose();
+    // axios
+    // .patch(
+    //   `https://dodgeqr.prometteur.in/api/admin/package/${id}`,
+    //   newpackage,
+    //   {
+    //     headers: {
+    //       Authorization: token,
+    //     },
+    //   }
+    // )
+    // .then((res) => {
+    //   // setMessageList([...messageslist, res.data]);
+    //   console.log(res.data);
+    //   handleClose();
      
-    })
-    .catch((err) => {
-      console.log("err", err);
-    });
-    setNewPackage(" ");
+    // })
+    // .catch((err) => {
+    //   console.log("err", err);
+    // });
+    // setNewPackage(" ");
   };
 
   //   ADD new package API

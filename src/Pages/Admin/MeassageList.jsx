@@ -11,6 +11,7 @@ const MeassageList = () => {
   // console.log(flag);
 
   const [show, setShow] = useState(false);
+
   const [id, setId] = useState();
   const [element, setElement] = useState();
 
@@ -34,12 +35,23 @@ const MeassageList = () => {
   }, [show]);
 
   const OnupdateMessage = (id, data) => {
-    console.log("hello clicked");
-
-    setId(id);
-    setElement(data);
-    setShow(true);
+    // console.log("hello clicked");
+    if (id !== null) {
+      setId(id);
+      setElement(data);
+      setShow(true);
+    } else {
+      setId(null);
+      setElement(null);
+      setShow(true);
+    }
   };
+
+
+  const handleNewModal=() => {
+    setId(null)
+    setShow(true)
+  }
   // console.log(messageslist)
 
   const onDelete = (id) => {
@@ -66,6 +78,12 @@ const MeassageList = () => {
             <p className="pt-4">Manage Messages</p>
           </div>
           <div className="my-3 me-5">
+            <button
+              className="btn btn-outline-primary "
+              onClick={handleNewModal}
+            >
+              Add New Messages
+            </button>
             <AddMessages
               show={show}
               setShow={setShow}

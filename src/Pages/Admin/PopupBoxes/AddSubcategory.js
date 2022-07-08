@@ -64,69 +64,60 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
 
   const postSubcategory = () => {
     console.log("one", one);
-    axios
-      .post(
-        "https://dodgeqr.prometteur.in/api/subcategory",
-        {
-          title: newonesubcategory.title,
-          category: newonesubcategory.Category,
-          messages_id: one,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        // setCategory([...category, res.data]);
+    // axios
+    //   .post(
+    //     "https://dodgeqr.prometteur.in/api/subcategory",
+    //     {
+    //       title: newonesubcategory.title,
+    //       category: newonesubcategory.Category,
+    //       messages_id: one,
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: token,
+    //       },
+    //     }
+    //   )
+    //   .then((res) => {
+    //     // setCategory([...category, res.data]);
 
-        handleCancel();
-        setNewOneSubCategory("");
-        setOne("");
+    //     handleCancel();
+    //     setNewOneSubCategory("");
+    //     setOne("");
 
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    //     console.log(res.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
 
   const updateSubcategory = (data, id) => {
-    console.log("update one", one);
-    console.log("update newsubcategory one", newonesubcategory);
+  
 
-    // console.log(data)
-
-    // console.log(element.title)
-    // console.log(element.category)
-    // console.log(element.messages_id.map((ele)=>ele._id))
-
-    // console.log([data , newonesubcategory , one])
-
-    axios
-      .patch(
-        `https://dodgeqr.prometteur.in/api/subcategory/${id}`,
-        {
-          title: newonesubcategory.title,
-          category: newonesubcategory.Category,
-          messages_id: one,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        handleCancel();
-        setNewOneSubCategory("");
-        setOne("");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // axios
+    //   .patch(
+    //     `https://dodgeqr.prometteur.in/api/subcategory/${id}`,
+    //     {
+    //       title: newonesubcategory.title,
+    //       category: newonesubcategory.Category,
+    //       messages_id: one,
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: token,
+    //       },
+    //     }
+    //   )
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     handleCancel();
+    //     setNewOneSubCategory("");
+    //     setOne("");
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
 
   const handleSubmit = (e) => {
@@ -145,7 +136,7 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
       <Button onClick={showModal}>Add New Subcategory</Button>
       {!id ? (
         <Modal
-        footer={null}
+          footer={null}
           title="Add Subcategory "
           visible={isModalVisible}
           onOk={handleOk}
@@ -215,7 +206,7 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
         </Modal>
       ) : (
         <Modal
-        footer={null}
+          footer={null}
           title="Add Subcategory "
           visible={isModalVisible}
           onOk={handleOk}
@@ -226,6 +217,7 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
             {/* title */}
             <label>Title</label>
             <Input
+              id="title"
               placeholder="Basic usage"
               className="form-control"
               name="title"
