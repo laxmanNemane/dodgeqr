@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import Index from "../../HOC_Component/Index";
@@ -61,6 +62,12 @@ const SubCategories = () => {
     setIsModalVisible(true);
   };
 
+  const handleOpen = () => {
+    setId("");
+    setElement("");
+    setIsModalVisible(true);
+  };
+
   // console.log(category);
 
   return (
@@ -72,12 +79,7 @@ const SubCategories = () => {
               <p className="pt-4">Manage Subcategory</p>
             </div>
             <div className="my-3 me-5">
-              <AddSubcategory
-                isModalVisible={isModalVisible}
-                setIsModalVisible={setIsModalVisible}
-                id={id}
-                element={element}
-              />
+              <Button onClick={handleOpen}>Add New Subcategory</Button>
             </div>
           </div>
           <div className="ap-com table-panel table">
@@ -109,7 +111,10 @@ const SubCategories = () => {
                           {element.category === 1 ? "Movable" : "Immovable"}
                         </td>
                         <td>
-                          {element.messages_id.map((m) => m.message).join(", ")}
+                          {element.messages_id &&
+                            element.messages_id
+                              .map((m) => m.message)
+                              .join(", ")}
                         </td>
 
                         <td>
@@ -147,6 +152,12 @@ const SubCategories = () => {
           </div>
         </div>
       </div>
+      <AddSubcategory
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+        id={id}
+        element={element}
+      />
     </>
   );
 };
