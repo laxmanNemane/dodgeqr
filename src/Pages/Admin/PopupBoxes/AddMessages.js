@@ -11,7 +11,7 @@ const AddMessages = ({ show, setShow, id, element }) => {
 
   const { token } = useContext(UserContext);
 
-  
+
 
   const handleSubmit = (values) => {
     if (!id) {
@@ -131,7 +131,7 @@ const AddMessages = ({ show, setShow, id, element }) => {
                     <ErrorMessage name="message" />
                     <button
                       type="submit"
-                      className="btn btn-outline-success me-2  mt-4 form-control"
+                      className="btn btn-outline-success me-2 form-control"
                       onSubmit={handleSubmit}
                     >
                       Add Message
@@ -143,7 +143,7 @@ const AddMessages = ({ show, setShow, id, element }) => {
           </Formik>
         </Modal>
       )}
-     
+
     </>
   );
 };
