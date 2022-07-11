@@ -55,229 +55,231 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
 
   const handleMessages = (e, setFieldValue) => {
     setFieldValue("messages_id", e);
+    console.log(e)
   };
 
-  console.log("outside of handlesubmit");
-  const handleSubmit = (values) => {
-    // alert("clicked handlesubmit")
+  const handleSubmit = (values, action) => {
     console.log(values);
-    console.log("inside handlesubmit");
-    // if (id) {
-    //   console.log(id)
-    //   console.log(values);
-    //   alert("clicked")
-    // axios
-    // .patch(
-    //   `https://dodgeqr.prometteur.in/api/subcategory/${id}`,
-    //   values,
-    //   {
-    //     headers: {
-    //       Authorization: token,
-    //     },
-    //   }
-    // )
-    // .then((res) => {
-    //   console.log(res.data);
-    //   handleCancel();
+    if (id) {
+      console.log(values);
+      axios
+        .patch(
+          `https://dodgeqr.prometteur.in/api/subcategory/${id}`,
+          values,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          handleCancel();
 
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    // });
-    // } else {
-    //   console.log(values);
-    //   axios
-    //     .post(
-    //       "https://dodgeqr.prometteur.in/api/subcategory",
-    //       values,
-    //       {
-    //         headers: {
-    //           Authorization: token,
-    //         },
-    //       }
-    //     )
-    //     .then((res) => {
-    //       handleCancel();
-    //       console.log(res.data);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      console.log(values);
+      axios
+        .post(
+          "https://dodgeqr.prometteur.in/api/subcategory",
+          values,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        )
+        .then((res) => {
+          handleCancel();
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   return (
     <>
-      {id ? (
-        <Modal
-          footer={null}
-          title="Add Subcategory "
-          visible={isModalVisible}
-          onOk={handleOk}
-          onCancel={handleCancel}
-        >
-          <Formik
-            initialValues={{
-              title: element.title,
-              category: element.category,
-              messages_id: element.messages_id,
-            }}
-            validate={validate}
-            onSubmit={handleSubmit}
+
+      {id ?
+        (
+          <Modal
+            destroyOnClose={true}
+            title="Add message"
+            visible={isModalVisible}
+            onCancel={() => setIsModalVisible(false)}
+            footer={null}
           >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              setFieldValue,
-              handleSubmit,
+            <Formik
+              initialValues={{
+                title: element.title,
+                category: element.category,
+                messages_id: element.messages_id,
 
-              /* and other goodies */
-            }) => {
-              return (
-                <Form>
-                  <Field
-                    className="form-control mb-3"
-                    id="title"
-                    name="title"
-                    value={values.title}
-                    placeholder="write Title here"
-                  />
+              }}
+              validate={(values) => {
+                const errors = {};
+                if (!values.title) {
+                  errors.title = "required";
+                }
+                return errors;
+              }}
+              onSubmit={handleSubmit}
+            >
+              {({ values, errors, setFieldValue, handleChange }) => {
+                return (
+                  <div>
+                    <Form>
+                      <Field
+                        className="form-control mb-3"
+                        id="title"
+                        name="title"
+                        value={values.title}
+                        placeholder="write Title here"
+                      />
+                      {/* <ErrorMessage name="message" /> */}
 
-                  <label>Category</label>
-                  <br />
-                  <Radio.Group
-                    onChange={handleChange}
-                    name="category"
-                    value={values.category}
-                  >
-                    <Radio value={1}>Movable</Radio>
-                    <Radio value={2}>Immovable</Radio>
-                  </Radio.Group>
+                      <label>Category</label><br />
+                      <Radio.Group
+                        onChange={handleChange}
+                        name="category"
+                        value={values.category}
+                      >
+                        <Radio value={1}>Movable</Radio>
+                        <Radio value={2}>Immovable</Radio>
+                      </Radio.Group>
+                      <br />
+                      <br/>
+                      
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        placeholder="Please select"
+                        id="messages_id"
+                        name="messages_id"
+                        defaultValue={element.messages_id.map((ele) => {
+                          return (
+                            <Option key={ele._id} values={ele._id}>
+                              {ele._id}
+                            </Option>
+                          );
+                        })}
+                        style={{ width: "100%" }}
+                        onChange={(e) => handleMessages(e, setFieldValue)}
+                        tokenSeparators={[","]}
+                      >
+                        {messageslist &&
+                          messageslist.map((ele, index) => {
+                            return (
+                              <Option key={index} value={ele._id}>
+                                {ele.message}
+                              </Option>
+                            );
+                          })}
+                      </Select>
 
-                  <Select
-                    mode="multiple"
-                    allowClear
-                    placeholder="Please select"
-                    id="messages_id"
-                    name="messages_id"
-                    defaultValue={element.messages_id.map((ele) => {
-                      return (
-                        <Option key={ele._id} values={ele._id}>
-                          {ele._id}
-                        </Option>
-                      );
-                    })}
-                    style={{ width: "100%" }}
-                    onChange={(e) => handleMessages(e, setFieldValue)}
-                    tokenSeparators={[","]}
-                  >
-                    {messageslist &&
-                      messageslist.map((ele, index) => {
-                        return (
-                          <Option key={index} value={ele._id}>
-                            {ele.message}
-                          </Option>
-                        );
-                      })}
-                  </Select>
-
-                  <button
-                    type="submit"
-                    className="btn btn-outline-success me-2 my-3 form-control"
-                    onClick={handleSubmit}
-                  >
-                    Update Message
-                  </button>
-                </Form>
-              );
-            }}
-          </Formik>
-        </Modal>
-      ) : (
-        <Modal
-          footer={null}
-          title="Add Subcategory "
-          visible={isModalVisible}
-          onOk={handleOk}
-          onCancel={handleCancel}
-        >
-          <Formik
-            initialValues={{
-              title: "",
-              category: "",
-              messages_id: [],
-            }}
-            validate={validate}
-            onSubmit={handleSubmit}
+                      <button
+                        type="submit"
+                        className="btn btn-outline-success me-2  my-3 form-control"
+                        onSubmit={handleSubmit}
+                      >
+                        Update Message
+                      </button>
+                    </Form>
+                  </div>
+                );
+              }}
+            </Formik>
+          </Modal>
+        ) : (
+          <Modal
+            destroyOnClose={true}
+            title="Add message"
+            visible={isModalVisible}
+            onCancel={() => setIsModalVisible(false)}
+            footer={null}
           >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              setFieldValue,
-              handleSubmit,
+            <Formik
+              initialValues={{
+                title: "",
+                category: "",
+                messages_id: []
+              }}
+              validate={(values) => {
+                const errors = {};
+                if (!values.title) {
+                  errors.title = "required";
+                }
+                return errors;
+              }}
+              onSubmit={handleSubmit}
+            >
+              {({ values, errors, setFieldValue, handleChange , handleSubmit}) => {
+                return (
+                  <div>
+                    <Form>
+                      <Field
+                        className="form-control mb-3"
+                        id="title"
+                        name="title"
+                        value={values.title}
+                        placeholder="write Title here"
+                      />
+                      {/* <ErrorMessage name="message" /> */}
 
-              /* and other goodies */
-            }) => {
-              return (
-                <Form>
-                  <Field
-                    className="form-control mb-3"
-                    id="title"
-                    name="title"
-                    value={values.title}
-                    placeholder="write Title here"
-                  />
+                      <label>Category</label><br/>
+                      <Radio.Group
+                        onChange={handleChange}
+                        name="category"
+                        value={values.category}
+                      >
+                        <Radio value={1}>Movable</Radio>
+                        <Radio value={2}>Immovable</Radio>
+                      </Radio.Group>
 
-                  <label>Category</label>
-                  <br />
-                  <Radio.Group
-                    onChange={handleChange}
-                    name="category"
-                    value={values.category}
-                  >
-                    <Radio value={1}>Movable</Radio>
-                    <Radio value={2}>Immovable</Radio>
-                  </Radio.Group>
+                      <br />
+                      <br/>
 
-                  <Select
-                    mode="multiple"
-                    allowClear
-                    placeholder="Please select"
-                    id="messages_id"
-                    name="messages_id"
-                    style={{ width: "100%" }}
-                    onChange={(e) => handleMessages(e, setFieldValue)}
-                    tokenSeparators={[","]}
-                  >
-                    {messageslist &&
-                      messageslist.map((ele, index) => {
-                        return (
-                          <Option key={index} value={ele._id}>
-                            {ele.message}
-                          </Option>
-                        );
-                      })}
-                  </Select>
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        placeholder="Please select"
+                        id="message_id"
+                        name="message_id"
+                        style={{ width: "100%" }}
+                        onChange={(e) => handleMessages(e, setFieldValue)}
+                        tokenSeparators={[","]}
+                      >
+                        {messageslist &&
+                          messageslist.map((ele, index) => {
+                            return (
+                              <Option key={index} value={ele._id}>
+                                {ele.message}
+                              </Option>
+                            );
+                          })}
+                      </Select>
 
-                  <button
-                    type="submit"
-                    className="btn btn-outline-success me-2  my-3 form-control"
-                    onClick={handleSubmit}
-                  >
-                    Add Message
-                  </button>
-                </Form>
-              );
-            }}
-          </Formik>
-        </Modal>
-      )}
+                      <button
+                        type="submit"
+                        className="btn btn-outline-success me-2 my-3 form-control"
+                        onSubmit={handleSubmit}
+                      >
+                        Add Message
+                      </button>
+                    </Form>
+                  </div>
+                );
+              }}
+            </Formik>
+          </Modal>
+        )
+      }
+
     </>
   );
 };
@@ -356,3 +358,87 @@ export default AddSubcategory;
 //   }}
 // </Formik>
 // </Modal>
+
+
+
+
+// {id ? (
+  // <Formik
+  //   initialValues={{
+  //     title: element.title,
+  //     category: element.category,
+  //     messages_id: element.messages_id,
+  //   }}
+  //   validate={validate}
+  //   onSubmit={handleSubmit}
+  // >
+  //   {({
+  //     values,
+  //     errors,
+  //     touched,
+  //     handleChange,
+  //     handleBlur,
+  //     setFieldValue,
+  //     handleSubmit,
+
+  //     /* and other goodies */
+  //   }) => {
+  //     return (
+  //       <Form>
+  //         <Field
+  //           className="form-control mb-3"
+  //           id="title"
+  //           name="title"
+  //           value={values.title}
+  //           placeholder="write Title here"
+  //         />
+
+  //         <label>Category</label>
+  //         <br />
+  //         <Radio.Group
+  //           onChange={handleChange}
+  //           name="category"
+  //           value={values.category}
+  //         >
+  //           <Radio value={1}>Movable</Radio>
+  //           <Radio value={2}>Immovable</Radio>
+  //         </Radio.Group>
+
+  //         <Select
+  //           mode="multiple"
+  //           allowClear
+  //           placeholder="Please select"
+  //           id="messages_id"
+  //           name="messages_id"
+  //           defaultValue={element.messages_id.map((ele) => {
+  //             return (
+  //               <Option key={ele._id} values={ele._id}>
+  //                 {ele._id}
+  //               </Option>
+  //             );
+  //           })}
+  //           style={{ width: "100%" }}
+  //           onChange={(e) => handleMessages(e, setFieldValue)}
+  //           tokenSeparators={[","]}
+  //         >
+  //           {messageslist &&
+  //             messageslist.map((ele, index) => {
+  //               return (
+  //                 <Option key={index} value={ele._id}>
+  //                   {ele.message}
+  //                 </Option>
+  //               );
+  //             })}
+  //         </Select>
+
+  //         <button
+  //         type="submit"
+  //           className="btn btn-outline-success me-2 my-3 form-control"
+  //           onSubmit={handleSubmit}>
+  //           Update Message
+  //         </button>
+  //       </Form>
+  //     );
+  //   }}
+  // </Formik>
+// ) : (

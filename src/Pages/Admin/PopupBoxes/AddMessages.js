@@ -131,7 +131,7 @@ const AddMessages = ({ show, setShow, id, element }) => {
                     <ErrorMessage name="message" />
                     <button
                       type="submit"
-                      className="btn btn-outline-success me-2 form-control"
+                      className="btn btn-outline-success me-2  mt-4 form-control"
                       onSubmit={handleSubmit}
                     >
                       Add Message
