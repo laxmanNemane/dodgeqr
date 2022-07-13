@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useContext } from "react";
+import { useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
+import { logout } from "../Redux-toolkit/userSlice";
 import UserContext from "../useContext/Context";
 
 const SidebarNav = () => {
@@ -8,6 +10,9 @@ const SidebarNav = () => {
 
   const navigate = useNavigate();
 
+  console.log(token)
+
+  const dispatch = useDispatch()
   const Logout = () => {
     axios
       .post("https://dodgeqr.prometteur.in/api/admin/logout", {
@@ -19,7 +24,7 @@ const SidebarNav = () => {
         },
       })
       .then((res) => {
-        console.log(res);
+        dispatch(logout())
       })
       .catch((err) => {
         console.log(err);

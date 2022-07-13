@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
-import { loginUser } from "../Redux-toolkit/userSlice";
+import { login } from "../Redux-toolkit/userSlice";
 import UserContext from "../useContext/Context";
 
 const LoginPage = () => {
@@ -16,9 +16,7 @@ const LoginPage = () => {
   const data = useSelector((state) => state.users);
   console.log(data);
 
-  useEffect(() => {
-    disaptch(loginUser());
-  }, []);
+
 
   // forget password
 
@@ -30,6 +28,8 @@ const LoginPage = () => {
     // console.log(newData);
   };
 
+
+
   const Login = async () => {
     // console.log(user);
     try {
@@ -39,7 +39,8 @@ const LoginPage = () => {
         user
       );
       setAdmin(result.data.user);
-
+      disaptch(login(result.data))
+      disaptch(login({token:result.data.token}))
       localStorage.setItem("token", result.data.token);
       localStorage.setItem("user", JSON.stringify(result.data.user));
 
@@ -50,12 +51,14 @@ const LoginPage = () => {
     } catch (error) {
       console.log("please fill the valid detail");
     }
+
   };
 
   console.log(flag);
   const Submit = (e) => {
     e.preventDefault();
     // console.log(user);
+
   };
 
   console.log(user);

@@ -12,20 +12,10 @@ import SignUp from "./Components/SignUp";
 import ForgetPassword from "./Components/ForgetPassword";
 import ProtectRoute from "./PrivateRoute/ProtectRoute";
 import ProfilePage from "./Pages/Admin/ProfilePage";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { loginUser } from "./Redux-toolkit/userSlice";
+
 
 function App() {
-  const disaptch = useDispatch();
-
-  const data = useSelector(state=>state.users)
-  console.log(data)
-
-
-  useEffect(()=>{
-    disaptch(loginUser())
-  },[])
+  
 
 
   return (

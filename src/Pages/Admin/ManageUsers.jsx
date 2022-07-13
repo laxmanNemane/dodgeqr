@@ -1,6 +1,8 @@
 // import axios from "axios";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import {  useNavigate } from "react-router-dom";
 import Index from "../../HOC_Component/Index";
 import UserContext from "../../useContext/Context";
 // import { API_URL } from "../../commen/API";
@@ -10,6 +12,7 @@ const ManageUsers = () => {
   // console.log(token);
 
   console.log(manageusers.length);
+  const navigate = useNavigate()
 
   useEffect(() => {
     axios
@@ -23,6 +26,7 @@ const ManageUsers = () => {
       })
       .catch((error) => {
         console.error(error);
+        navigate("/")
       });
   }, [token]);
 
