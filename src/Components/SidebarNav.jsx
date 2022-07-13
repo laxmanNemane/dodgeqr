@@ -1,12 +1,10 @@
 import axios from "axios";
 import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import UserContext from "../useContext/Context";
 
 const SidebarNav = () => {
-  const {token} = useContext(UserContext);
-
-  
+  const { token } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -48,13 +46,13 @@ const SidebarNav = () => {
               id="navbarDropdown"
               data-bs-toggle="dropdown"
               aria-expanded="false"
-            >
-              
-            </a>
+            ></a>
             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li className="ms-2">
-                <i className="fas fa-user"></i> My Profile
-              </li>
+              <NavLink to="/profile">
+                <li className="ms-2">
+                  <i className="fas fa-user"></i> My Profile
+                </li>
+              </NavLink>
               <li className="ms-2">
                 <i className="fas fa-user-cog"></i> Account Setting
               </li>

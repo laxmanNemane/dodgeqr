@@ -35,8 +35,6 @@ const ManagePakages = () => {
     callMessageApi();
   }, [show]);
 
-  
-
   const OnupdateMessage = (id, data) => {
     setId(id);
     setElement(data);
@@ -59,6 +57,11 @@ const ManagePakages = () => {
       });
   };
 
+
+  const handleOpen=()=>{
+    setId("")
+    setShow(true)
+  }
   // console.log(managePackage);
 
   return (
@@ -69,6 +72,9 @@ const ManagePakages = () => {
             <p className="pt-4">Manage Packages</p>
           </div>
           <div className="my-3 me-5">
+            <button className="btn btn-outline-primary " onClick={handleOpen}>
+              Add New Package
+            </button>
             <AddPackages
               managePackage={managePackage}
               setManagePackage={setManagePackage}

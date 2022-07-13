@@ -1,13 +1,24 @@
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
+import { loginUser } from "../Redux-toolkit/userSlice";
 import UserContext from "../useContext/Context";
 
 const LoginPage = () => {
   const { user, setUser, flag, setAdmin } = useContext(UserContext);
 
   const navigate = useNavigate();
+
+  const disaptch = useDispatch();
+
+  const data = useSelector((state) => state.users);
+  console.log(data);
+
+  useEffect(() => {
+    disaptch(loginUser());
+  }, []);
 
   // forget password
 

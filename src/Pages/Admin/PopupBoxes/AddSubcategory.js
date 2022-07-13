@@ -16,8 +16,7 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
 
   const { token, messageslist, setMessageList } = useContext(UserContext);
 
-  // console.log(token);
-  // console.log(flag);
+
 
   useEffect(() => {
     axios
@@ -153,8 +152,8 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
                         <Radio value={2}>Immovable</Radio>
                       </Radio.Group>
                       <br />
-                      <br/>
-                      
+                      <br />
+
                       <Select
                         mode="multiple"
                         allowClear
@@ -218,7 +217,7 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
               }}
               onSubmit={handleSubmit}
             >
-              {({ values, errors, setFieldValue, handleChange , handleSubmit}) => {
+              {({ values, errors, setFieldValue, handleChange, handleSubmit }) => {
                 return (
                   <div>
                     <Form>
@@ -231,7 +230,7 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
                       />
                       {/* <ErrorMessage name="message" /> */}
 
-                      <label>Category</label><br/>
+                      <label>Category</label><br />
                       <Radio.Group
                         onChange={handleChange}
                         name="category"
@@ -242,7 +241,7 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
                       </Radio.Group>
 
                       <br />
-                      <br/>
+                      <br />
 
                       <Select
                         mode="multiple"
@@ -286,159 +285,3 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
 
 export default AddSubcategory;
 
-//  <Modal
-// footer={null}
-// title="Add Subcategory "
-// visible={isModalVisible}
-// onOk={handleOk}
-// onCancel={handleCancel}
-// >
-// <Formik
-//   initialValues={initialValue}
-//   validate={validate}
-//   onSubmit={hanleSubmit}
-// >
-//   {({
-//     values,
-//     errors,
-//     touched,
-//     handleChange,
-//     handleBlur,
-//     setFieldValue,
-//     handleSubmit,
-
-/* and other goodies */
-//   }) => {
-//     return (
-//       <Form>
-//         <Field
-//           className="form-control mb-3"
-//           id="title"
-//           name="title"
-//           value={values.title}
-//           placeholder="write Title here"
-//         />
-
-//         <label>Category</label>
-//         <br />
-//         <Radio.Group
-//           onChange={handleChange}
-//           name="Category"
-//           value={values.Category}
-//         >
-//           <Radio value={1}>Movable</Radio>
-//           <Radio value={2}>Immovable</Radio>
-//         </Radio.Group>
-
-//         <Select
-//           mode="multiple"
-//           allowClear
-//           placeholder="Please select"
-//           id="message_id"
-//           name="message_id"
-//           style={{ width: "100%" }}
-//           onChange={(e) => handleMessages(e, setFieldValue)}
-//           tokenSeparators={[","]}
-//         >
-//           {messageslist &&
-//             messageslist.map((ele, index) => {
-//               return (
-//                 <Option key={index} value={ele._id}>
-//                   {ele.message}
-//                 </Option>
-//               );
-//             })}
-//         </Select>
-
-//         <button type="submit" onSubmit={hanleSubmit}>
-//           Submit
-//         </button>
-//       </Form>
-//     );
-//   }}
-// </Formik>
-// </Modal>
-
-
-
-
-// {id ? (
-  // <Formik
-  //   initialValues={{
-  //     title: element.title,
-  //     category: element.category,
-  //     messages_id: element.messages_id,
-  //   }}
-  //   validate={validate}
-  //   onSubmit={handleSubmit}
-  // >
-  //   {({
-  //     values,
-  //     errors,
-  //     touched,
-  //     handleChange,
-  //     handleBlur,
-  //     setFieldValue,
-  //     handleSubmit,
-
-  //     /* and other goodies */
-  //   }) => {
-  //     return (
-  //       <Form>
-  //         <Field
-  //           className="form-control mb-3"
-  //           id="title"
-  //           name="title"
-  //           value={values.title}
-  //           placeholder="write Title here"
-  //         />
-
-  //         <label>Category</label>
-  //         <br />
-  //         <Radio.Group
-  //           onChange={handleChange}
-  //           name="category"
-  //           value={values.category}
-  //         >
-  //           <Radio value={1}>Movable</Radio>
-  //           <Radio value={2}>Immovable</Radio>
-  //         </Radio.Group>
-
-  //         <Select
-  //           mode="multiple"
-  //           allowClear
-  //           placeholder="Please select"
-  //           id="messages_id"
-  //           name="messages_id"
-  //           defaultValue={element.messages_id.map((ele) => {
-  //             return (
-  //               <Option key={ele._id} values={ele._id}>
-  //                 {ele._id}
-  //               </Option>
-  //             );
-  //           })}
-  //           style={{ width: "100%" }}
-  //           onChange={(e) => handleMessages(e, setFieldValue)}
-  //           tokenSeparators={[","]}
-  //         >
-  //           {messageslist &&
-  //             messageslist.map((ele, index) => {
-  //               return (
-  //                 <Option key={index} value={ele._id}>
-  //                   {ele.message}
-  //                 </Option>
-  //               );
-  //             })}
-  //         </Select>
-
-  //         <button
-  //         type="submit"
-  //           className="btn btn-outline-success me-2 my-3 form-control"
-  //           onSubmit={handleSubmit}>
-  //           Update Message
-  //         </button>
-  //       </Form>
-  //     );
-  //   }}
-  // </Formik>
-// ) : (

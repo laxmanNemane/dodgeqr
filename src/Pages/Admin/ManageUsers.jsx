@@ -6,10 +6,10 @@ import UserContext from "../../useContext/Context";
 // import { API_URL } from "../../commen/API";
 
 const ManageUsers = () => {
-  const { token } = useContext(UserContext);
+  const { token, manageusers, setManageusers } = useContext(UserContext);
   // console.log(token);
 
-  const [manageusers, setManageusers] = useState([]);
+  console.log(manageusers.length);
 
   useEffect(() => {
     axios
@@ -34,8 +34,8 @@ const ManageUsers = () => {
         <div className="ap-com sm-com-heading mb-4 text-start">
           <h5 className="pt-4">Manage Users</h5>
         </div>
-        <div className="ap-com table-panel ">
-          <table className="table table-bordered">
+        <div className="ap-com table-panel  table-responsive">
+          <table className="table table-bordered ">
             <thead>
               <tr>
                 <th scope="col">Name</th>

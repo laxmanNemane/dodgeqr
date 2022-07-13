@@ -1,8 +1,12 @@
 import React from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import Index from "../../HOC_Component/Index";
+import UserContext from "../../useContext/Context";
 
 const MainDashbord = () => {
+
+  const { manageusers } = useContext(UserContext)
   return (
     <div className="ms-3">
       <div className="ap-com container-main me-5 pe-5 ms-auto">
@@ -17,7 +21,7 @@ const MainDashbord = () => {
                 <p className="card-text h1 text-secondary">
                   <i className="fas fa-user"></i>
                 </p>
-                <h3>350</h3>
+                <h3>{manageusers.length}</h3>
               </div>
             </div>
           </Link>

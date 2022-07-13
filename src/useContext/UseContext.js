@@ -7,6 +7,10 @@ const UseContext = (props) => {
     password: "",
   });
 
+
+  //users 
+  const [manageusers, setManageusers] = useState([]);
+
   // messaeg
 
   const [messageslist, setMessageList] = useState([]);
@@ -43,6 +47,8 @@ const UseContext = (props) => {
         setMessageList,
         category,
         setCategory,
+        manageusers,
+        setManageusers
       }}
     >
       {props.children}

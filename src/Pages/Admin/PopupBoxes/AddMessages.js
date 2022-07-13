@@ -11,8 +11,6 @@ const AddMessages = ({ show, setShow, id, element }) => {
 
   const { token } = useContext(UserContext);
 
-
-
   const handleSubmit = (values) => {
     if (!id) {
       axios
@@ -143,7 +141,6 @@ const AddMessages = ({ show, setShow, id, element }) => {
           </Formik>
         </Modal>
       )}
-
     </>
   );
 };
