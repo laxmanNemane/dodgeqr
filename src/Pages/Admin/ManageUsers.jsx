@@ -23,6 +23,9 @@ const ManageUsers = () => {
   }, []);
 
   // console.log(manageusers);
+  if(status === "loading"){
+    return  <h4 style={{textAlign:"center" , margin:"10% 0 0 0"}}> <Spin tip="loading...." size="large" /></h4>
+  }
 
   return (
     <>
@@ -32,7 +35,7 @@ const ManageUsers = () => {
         </div>
 {/* 
         {status === "loading" ? (
-           <h4 style={{textAlign:"center" , margin:"10% 0 0 0"}}> <Spin tip="loading...." size="large" /></h4>
+          
         ) : ( */}
           <div className="ap-com table-panel  table-responsive">
             <table className="table table-bordered ">

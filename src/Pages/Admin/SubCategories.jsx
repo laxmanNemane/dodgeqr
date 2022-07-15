@@ -10,7 +10,6 @@ import AddSubcategory from "./PopupBoxes/AddSubcategory";
 const SubCategories = () => {
   const { token } = useContext(UserContext);
 
-
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [id, setId] = useState();
@@ -18,15 +17,10 @@ const SubCategories = () => {
 
   const dispatch = useDispatch();
   const { subCategoryList, status } = useSelector((state) => state.subCategory);
-  console.log(subCategoryList);
+  // console.log(subCategoryList);
 
   useEffect(() => {
-    try {
-      
-      dispatch(callSubcategoryList());
-    } catch (error) {
-      console.log(error)
-    }
+    dispatch(callSubcategoryList());
   }, [isModalVisible]);
 
   const onDelete = (id) => {
@@ -64,6 +58,14 @@ const SubCategories = () => {
   };
 
   // console.log(category);
+  if (status === "loading") {
+    return (
+      <h4 style={{ textAlign: "center", margin: "10% 0 0 0" }}>
+        {" "}
+        <Spin tip="loading...." size="large" />
+      </h4>
+    );
+  }
 
   return (
     <>

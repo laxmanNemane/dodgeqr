@@ -2,8 +2,9 @@ import { Spin } from "antd";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Index from "../../HOC_Component/Index";
-import { callMessageList } from "../../Redux-toolkit/MessagesSlice";
+import { getMessages } from "../../Redux-toolkit/MessagesSlice";
 import UserContext from "../../useContext/Context";
 import AddMessages from "./PopupBoxes/AddMessages";
 
@@ -21,25 +22,31 @@ const MeassageList = () => {
   const [id, setId] = useState();
   const [element, setElement] = useState();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getMessageList = () => {
-    axios
-      .get("https://dodgeqr.prometteur.in/api/message-list", {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        setMessageList(res.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    try {
+      axios
+        .get("https://dodgeqr.prometteur.in/api/message-list", {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((res) => {
+          dispatch(getMessages(res.data));
+          // dispatch(getMessages({status:"Successfully get"}))
+        })
+        .catch((error) => {
+          console.log(error);
+          navigate("/");
+          localStorage.clear();
+          dispatch(getMessages({ status: "Error" }));
+        });
+    } catch (error) {}
   };
 
   useEffect(() => {
     getMessageList();
-    dispatch(callMessageList());
   }, [show]);
 
   const OnupdateMessage = (id, data) => {
@@ -70,16 +77,13 @@ const MeassageList = () => {
       })
       .then((res) => {
         console.log(res.data);
-        dispatch(callMessageList());
       })
       .catch((err) => {
         console.log(err);
+        navigate("/");
+        localStorage.clear();
       });
   };
-
-  if (status === "loading") {
-    <h2>loading.....</h2>;
-  }
 
   return (
     <>
@@ -104,69 +108,66 @@ const MeassageList = () => {
           </div>
         </div>
 
-      
-          <div className="ap-com table-panel ">
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th scope="col" width="20%">
-                    Id
-                  </th>
-                  <th scope="col" width="80%">
-                    Message
-                  </th>
-                  <th scope="col" width="20%">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              {messages &&
-                messages.map((message, index) => {
-                  return (
-                    <tbody key={index}>
-                      <tr>
-                        <td>{index + 1}</td>
-                        <td>{message.message}</td>
-                        <td>
-                          <div className="action-div dropdown">
-                            <button
-                              className="border-none"
-                              id="dropdownMenuButton1"
-                              data-bs-toggle="dropdown"
-                              aria-expanded="false"
-                              style={{ border: "none" }}
+        <div className="ap-com table-panel ">
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col" width="20%">
+                  Id
+                </th>
+                <th scope="col" width="80%">
+                  Message
+                </th>
+                <th scope="col" width="20%">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            {messages &&
+              messages.map((message, index) => {
+                return (
+                  <tbody key={index}>
+                    <tr>
+                      <td>{index + 1}</td>
+                      <td>{message.message}</td>
+                      <td>
+                        <div className="action-div dropdown">
+                          <button
+                            className="border-none"
+                            id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            style={{ border: "none" }}
+                          >
+                            <i className="fas fa-ellipsis-v"></i>
+                          </button>
+                          <ul
+                            className="dropdown-menu"
+                            aria-labelledby="dropdownMenuButton1"
+                          >
+                            <li
+                              className="my-2 mx-2"
+                              onClick={() =>
+                                OnupdateMessage(message._id, message)
+                              }
                             >
-                              <i className="fas fa-ellipsis-v"></i>
-                            </button>
-                            <ul
-                              className="dropdown-menu"
-                              aria-labelledby="dropdownMenuButton1"
+                              <i className="fas fa-pencil-alt mx-2"></i> Update
+                            </li>
+                            <li
+                              className="my-2 mx-2"
+                              onClick={() => onDelete(message._id)}
                             >
-                              <li
-                                className="my-2 mx-2"
-                                onClick={() =>
-                                  OnupdateMessage(message._id, message)
-                                }
-                              >
-                                <i className="fas fa-pencil-alt mx-2"></i>{" "}
-                                Update
-                              </li>
-                              <li
-                                className="my-2 mx-2"
-                                onClick={() => onDelete(message._id)}
-                              >
-                                <i className="fas fa-trash-alt mx-2"></i> Delete
-                              </li>
-                            </ul>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  );
-                })}
-            </table>
-          </div>
-        
+                              <i className="fas fa-trash-alt mx-2"></i> Delete
+                            </li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                );
+              })}
+          </table>
+        </div>
       </div>
     </>
   );

@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export const callSubcategoryList = createAsyncThunk(
-  "message/CallMessageList",
+  "Subcategory/callSubcategoryList",
   async () => {
     const token = localStorage.getItem("token");
     let res = await axios
@@ -12,11 +12,11 @@ export const callSubcategoryList = createAsyncThunk(
         Authorization: token,
       },
     })
-    // if (res.status === 200) {
+    if (res.status === 200) {
       return res.data;
-    // } else {
-    //   return "Somthings went Wrong";
-    // }
+    } else {
+      return "Somthings went Wrong";
+    }
   }
 );
 

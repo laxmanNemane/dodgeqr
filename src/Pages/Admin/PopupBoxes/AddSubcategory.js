@@ -1,7 +1,7 @@
 import axios from "axios";
 import UserContext from "../../../useContext/Context";
 import { Field, Form, Formik } from "formik";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Modal, Radio, Select } from "antd";
 const { Option } = Select;
 
@@ -15,6 +15,12 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
   };
 
   const { token, messageslist, setMessageList } = useContext(UserContext);
+  // const [messages, setMessages] = useState([]);
+  let children = [];
+
+  // console.log(messageslist);
+
+  // messageslist.map((msg) => children.push(msg._id));
 
   useEffect(() => {
     axios
@@ -25,6 +31,8 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
       })
       .then((res) => {
         setMessageList(res.data);
+        // setMessages(res.data);
+        // console.log(messages);
       })
       .catch((error) => {
         console.error(error);
@@ -39,24 +47,29 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
     if (!values.title) {
       errors.title = "title is required";
     }
+
     if (!values.Category) {
-      errors.title = "title is required";
+      errors.Category = "category is required";
     }
-    if (!values.message_id) {
+    if (!values.messages_id) {
       errors.messages_id = "title is required";
     }
     return errors;
   };
 
   // console.log(id);
+  console.log(element);
+  let message;
 
   const handleMessages = (e, setFieldValue) => {
+    message = e;
     setFieldValue("messages_id", e);
     console.log(e);
   };
 
   const handleSubmit = (values, action) => {
-    console.log(values);
+    // console.log(values);
+    // values.messages_id = message;
     if (id) {
       console.log(values);
       axios
@@ -90,6 +103,7 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
     }
   };
 
+  // console.log(element.messages_id.map((ele)=>ele._id))
   return (
     <>
       {id ? (
@@ -104,18 +118,20 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
             initialValues={{
               title: element.title,
               category: element.category,
-              messages_id: element.messages_id,
+              messages_id: element.messages_id.map((ele) => ele._id),
             }}
-            validate={(values) => {
-              const errors = {};
-              if (!values.title) {
-                errors.title = "required";
-              }
-              return errors;
-            }}
+            // validate={validate}
             onSubmit={handleSubmit}
           >
-            {({ values, errors, setFieldValue, handleChange }) => {
+            {({
+              values,
+              errors,
+              setFieldValue,
+              handleChange,
+              handleBlur,
+              touched,
+              handleSubmit,
+            }) => {
               return (
                 <div>
                   <Form>
@@ -123,9 +139,14 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
                       className="form-control mb-3"
                       id="title"
                       name="title"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
                       value={values.title}
                       placeholder="write Title here"
                     />
+                    {errors.title && touched.title ? (
+                      <h5>{errors.title}</h5>
+                    ) : null}
                     {/* <ErrorMessage name="message" /> */}
 
                     <label>Category</label>
@@ -149,7 +170,8 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
                       name="messages_id"
                       defaultValue={element.messages_id.map((ele) => {
                         return (
-                          <Option key={ele._id} values={ele._id}>
+                          <Option key={ele._id}>
+                            {/* {console.log(ele._id)} */}
                             {ele._id}
                           </Option>
                         );
@@ -171,7 +193,7 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
                     <button
                       type="submit"
                       className="btn btn-outline-success me-2  my-3 form-control"
-                      onSubmit={handleSubmit}
+                      onClick={handleSubmit}
                     >
                       Update Message
                     </button>
