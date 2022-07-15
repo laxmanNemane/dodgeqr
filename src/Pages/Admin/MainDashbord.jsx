@@ -1,12 +1,21 @@
 import React from "react";
+import { useEffect } from "react";
 import { useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Index from "../../HOC_Component/Index";
+import { callUsers } from "../../Redux-toolkit/ManageUsersSlice";
 import UserContext from "../../useContext/Context";
 
 const MainDashbord = () => {
+  const { userList, status } = useSelector((state) => state.allUser);
 
-  const { manageusers } = useContext(UserContext)
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(callUsers());
+  }, []);
+
   return (
     <div className="ms-3">
       <div className="ap-com container-main me-5 pe-5 ms-auto">
@@ -21,7 +30,7 @@ const MainDashbord = () => {
                 <p className="card-text h1 text-secondary">
                   <i className="fas fa-user"></i>
                 </p>
-                <h3>{manageusers.length}</h3>
+                <h3>{userList.length}</h3>
               </div>
             </div>
           </Link>

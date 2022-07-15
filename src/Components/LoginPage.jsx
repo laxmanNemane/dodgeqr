@@ -16,8 +16,6 @@ const LoginPage = () => {
   const data = useSelector((state) => state.users);
   console.log(data);
 
-
-
   // forget password
 
   const handleChange = async (e) => {
@@ -28,8 +26,6 @@ const LoginPage = () => {
     // console.log(newData);
   };
 
-
-
   const Login = async () => {
     // console.log(user);
     try {
@@ -39,8 +35,8 @@ const LoginPage = () => {
         user
       );
       setAdmin(result.data.user);
-      disaptch(login(result.data))
-      disaptch(login({token:result.data.token}))
+      disaptch(login(result.data));
+      disaptch(login({ token: result.data.token }));
       localStorage.setItem("token", result.data.token);
       localStorage.setItem("user", JSON.stringify(result.data.user));
 
@@ -51,14 +47,12 @@ const LoginPage = () => {
     } catch (error) {
       console.log("please fill the valid detail");
     }
-
   };
 
   console.log(flag);
   const Submit = (e) => {
     e.preventDefault();
     // console.log(user);
-
   };
 
   console.log(user);

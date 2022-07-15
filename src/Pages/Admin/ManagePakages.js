@@ -1,6 +1,10 @@
+import { Spin } from "antd";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {  useNavigate } from "react-router-dom";
 import Index from "../../HOC_Component/Index";
+import { callPackageList } from "../../Redux-toolkit/PackageSlice";
 import UserContext from "../../useContext/Context";
 import AddPackages from "./PopupBoxes/AddPackages";
 
@@ -15,24 +19,46 @@ const ManagePakages = () => {
   //store value of all packages
   const [managePackage, setManagePackage] = useState([]);
 
-  const callMessageApi = () => {
-    axios
-      .get("https://dodgeqr.prometteur.in/api/packages", {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        setManagePackage(res.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+  const dispatch = useDispatch();
+  const { packages, status } = useSelector((state) => state.package);
+  console.log(packages);
+
+  const navigate = useNavigate()
+
+  // const callMessageApi = () => {
+  //   axios
+  //     .get("https://dodgeqr.prometteur.in/api/packages", {
+  //       headers: {
+  //         Authorization: token,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       setManagePackage(res.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
+
+ 
+
+
+  const  getPackagetoredux = ()=>{
+
+    dispatch(callPackageList()).then((result) => {
+      console.log(result); // => 233
+    })
+    .catch((error) => {
+      navigate("/") // if there is an error
+      console.error(error); 
+    });
+  }
 
   // get packages API
   useEffect(() => {
-    callMessageApi();
+    // callMessageApi();
+    getPackagetoredux()
+   
   }, [show]);
 
   const OnupdateMessage = (id, data) => {
@@ -49,19 +75,18 @@ const ManagePakages = () => {
         },
       })
       .then((res) => {
-        console.log(res.data);
-        callMessageApi();
+        // console.log(res.data);
+        dispatch(callPackageList());
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-
-  const handleOpen=()=>{
-    setId("")
-    setShow(true)
-  }
+  const handleOpen = () => {
+    setId("");
+    setShow(true);
+  };
   // console.log(managePackage);
 
   return (
@@ -85,66 +110,71 @@ const ManagePakages = () => {
             />
           </div>
         </div>
-        <div className="ap-com table-panel ">
-          <table className="table ">
-            <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Title</th>
-                <th scope="col">Description</th>
-                <th scope="col">Price</th>
-                <th scope="col">Action</th>
-                <th></th>
-              </tr>
-            </thead>
+        {status === "loading" ? (
+           <h4 style={{textAlign:"center" , margin:"10% 0 0 0"}}> <Spin tip="loading...." size="large" /></h4>
+        ) : (
+          <div className="ap-com table-panel ">
+            <table className="table ">
+              <thead>
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">Title</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Action</th>
+                  <th></th>
+                </tr>
+              </thead>
 
-            {managePackage &&
-              managePackage.map((element, index) => {
-                return (
-                  <tbody key={index}>
-                    <tr>
-                      <td>{index + 1}</td>
-                      <td>{element.title}</td>
-                      <td>{element.description}</td>
-                      <td>{element.price}</td>
-                      <td className="">
-                        <div className="action-div dropdown">
-                          <button
-                            className=""
-                            id="dropdownMenuButton1"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                            style={{ border: "none" }}
-                          >
-                            <i className="fas fa-ellipsis-v"></i>
-                          </button>
-                          <ul
-                            className="dropdown-menu"
-                            aria-labelledby="dropdownMenuButton1"
-                          >
-                            <li
-                              className="my-2 mx-2"
-                              onClick={() =>
-                                OnupdateMessage(element._id, element)
-                              }
+              {packages &&
+                packages.map((element, index) => {
+                  return (
+                    <tbody key={index}>
+                      <tr>
+                        <td>{index + 1}</td>
+                        <td>{element.title}</td>
+                        <td>{element.description}</td>
+                        <td>{element.price}</td>
+                        <td className="">
+                          <div className="action-div dropdown">
+                            <button
+                              className=""
+                              id="dropdownMenuButton1"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                              style={{ border: "none" }}
                             >
-                              <i className="fas fa-pencil-alt mx-2"></i> Update
-                            </li>
-                            <li
-                              className="my-2 mx-2"
-                              onClick={() => onDelete(element._id)}
+                              <i className="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul
+                              className="dropdown-menu"
+                              aria-labelledby="dropdownMenuButton1"
                             >
-                              <i className="fas fa-trash-alt mx-2"></i> Delete
-                            </li>
-                          </ul>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                );
-              })}
-          </table>
-        </div>
+                              <li
+                                className="my-2 mx-2"
+                                onClick={() =>
+                                  OnupdateMessage(element._id, element)
+                                }
+                              >
+                                <i className="fas fa-pencil-alt mx-2"></i>{" "}
+                                Update
+                              </li>
+                              <li
+                                className="my-2 mx-2"
+                                onClick={() => onDelete(element._id)}
+                              >
+                                <i className="fas fa-trash-alt mx-2"></i> Delete
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  );
+                })}
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

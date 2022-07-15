@@ -1,38 +1,33 @@
-import { Button } from "antd";
+import { Button, Spin } from "antd";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Index from "../../HOC_Component/Index";
+import { callSubcategoryList } from "../../Redux-toolkit/SubcategorySlice";
 import UserContext from "../../useContext/Context";
 import AddSubcategory from "./PopupBoxes/AddSubcategory";
 
 const SubCategories = () => {
-  const { token, category, setCategory } = useContext(UserContext);
+  const { token } = useContext(UserContext);
 
-  // console.log(category);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [id, setId] = useState();
   const [element, setElement] = useState();
 
-  useEffect(() => {
-    getCategories();
-  }, [isModalVisible]);
+  const dispatch = useDispatch();
+  const { subCategoryList, status } = useSelector((state) => state.subCategory);
+  console.log(subCategoryList);
 
-  const getCategories = () => {
-    axios
-      .get("https://dodgeqr.prometteur.in/api/subcategory", {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        setCategory(res.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+  useEffect(() => {
+    try {
+      
+      dispatch(callSubcategoryList());
+    } catch (error) {
+      console.log(error)
+    }
+  }, [isModalVisible]);
 
   const onDelete = (id) => {
     if (
@@ -48,7 +43,7 @@ const SubCategories = () => {
         })
         .then((res) => {
           console.log(res.data);
-          getCategories();
+          // dispatch(callSubcategoryList());
         })
         .catch((err) => {
           console.log(err);
@@ -82,6 +77,9 @@ const SubCategories = () => {
               <Button onClick={handleOpen}>Add New Subcategory</Button>
             </div>
           </div>
+          {/* {status === "loading" ? (
+            <h4 style={{textAlign:"center" , margin:"10% 0 0 0"}}> <Spin tip="loading...." size="large" /></h4>
+          ) : ( */}
           <div className="ap-com table-panel table">
             <table className="table table-bordered">
               <thead>
@@ -101,8 +99,8 @@ const SubCategories = () => {
                   <th></th>
                 </tr>
               </thead>
-              {category &&
-                category.map((element, index) => {
+              {subCategoryList &&
+                subCategoryList.map((element, index) => {
                   return (
                     <tbody key={index}>
                       <tr>
@@ -150,6 +148,7 @@ const SubCategories = () => {
                 })}
             </table>
           </div>
+          {/* )} */}
         </div>
       </div>
       <AddSubcategory
