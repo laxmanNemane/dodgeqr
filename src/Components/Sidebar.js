@@ -1,8 +1,13 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
 
 const Sidebar = () => {
+
+  const {user , isLoggedIn ,Flag} = useSelector(state=>state.users)
+  console.log('User State',user)
+
   return (
     <div className="bg-light" style={{ width: "370px", height: "120vh" }}>
       <nav id="sidebar" className="sidebar-panel">
@@ -26,7 +31,8 @@ const Sidebar = () => {
           </span>
         </div>
 
-        <div className="mt-5 scroll-sidebar scrollbarbar text-center">
+        { user?.user?.user_role === 1 ? (
+          <div className="mt-5 scroll-sidebar scrollbarbar text-center">
           <ul className="list-unstyled w-75 text-start ms-5 pt-5 ">
             <NavLink to="/dashbord" className="text-decoration-none text-dark">
               <li className="py-2 text-black">
@@ -65,6 +71,43 @@ const Sidebar = () => {
             </NavLink>
           </ul>
         </div>
+
+        ):(
+          <div className="mt-5 scroll-sidebar scrollbarbar text-center">
+          <ul className="list-unstyled w-75 text-start ms-5 pt-5 ">
+              <NavLink to="/u_package" className="text-decoration-none text-dark">
+              <li className="py-2">
+                <i className="fas fa-clipboard-list " />
+                &nbsp; &nbsp; Package list
+              </li>
+            </NavLink>
+             <NavLink
+              to="/u_purchase_history"
+              className="text-decoration-none text-dark"
+            >
+              <li className="py-2">
+                <i className="fas fa-clipboard-list " />
+                &nbsp; &nbsp; Purchase History
+              </li>
+            </NavLink>
+           
+            <NavLink
+              to="/u_device_history"
+              className="text-decoration-none text-dark"
+            >
+              <li className="py-2">
+                <i className="fas fa-clipboard " /> &nbsp; &nbsp;Device History
+              </li>
+            </NavLink>
+           
+          
+          </ul>
+        </div>
+        // "nothing"
+          
+        )}
+
+        
       </nav>
     </div>
   );

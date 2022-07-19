@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {  createSlice } from "@reduxjs/toolkit";
 
 const userSlice = createSlice({
   name: "userLogin",
@@ -13,7 +13,7 @@ const userSlice = createSlice({
       state.user = action.payload;
       state.isLoggedIn = "true";
       state.Flag = "true";
-      state.token = action.payload.token
+      // state.token = action.payload.token
     },
     logout: (state, action) => {
       state.user = "null";

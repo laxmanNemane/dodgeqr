@@ -1,51 +1,24 @@
 import { Modal } from "antd";
-import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React, { useContext } from "react";
-import UserContext from "../../../useContext/Context";
+import React from "react";
+import { UpdateAddMessages } from "../../../commen/API";
 
-const AddMessages = ({ show, setShow, id, element }) => {
+const AddMessages = ({
+  show,
+  setShow,
+  id,
+  element,
+  updateStatus,
+  setUpdateStatus,
+}) => {
   const handleClose = () => {
     setShow(false);
   };
 
-  const { token } = useContext(UserContext);
-
   const handleSubmit = (values) => {
-    if (!id) {
-      axios
-        .post("https://dodgeqr.prometteur.in/api/message", values, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          // setMessageList([...messageslist, res.data]);
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log("err", err);
-        });
-      // ("");
-      handleClose();
-    } else {
-      axios
-        .patch(`https://dodgeqr.prometteur.in/api/message/${id}`, values, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          // setMessageList([...messageslist, res.data]);
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log("err", err);
-        });
-      handleClose();
-    }
-    console.log("values of ", values);
+    UpdateAddMessages(values, id);
     handleClose();
+    setUpdateStatus(true);
   };
 
   return (
@@ -69,7 +42,7 @@ const AddMessages = ({ show, setShow, id, element }) => {
             }}
             onSubmit={handleSubmit}
           >
-            {({ values, errors, handleSubmit }) => {
+            {({ values, handleSubmit }) => {
               return (
                 <div>
                   <Form>

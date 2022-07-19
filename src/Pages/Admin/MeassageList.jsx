@@ -3,10 +3,17 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import {
+  Base_Url,
+  callAcction,
+  getMessageList,
+  RemoveMessage,
+} from "../../commen/API";
 import Index from "../../HOC_Component/Index";
 import { getMessages } from "../../Redux-toolkit/MessagesSlice";
 import UserContext from "../../useContext/Context";
 import AddMessages from "./PopupBoxes/AddMessages";
+import { token } from "../../commen/API";
 
 const MeassageList = () => {
   const { token, messageslist, setMessageList } = useContext(UserContext);
@@ -15,7 +22,7 @@ const MeassageList = () => {
   // console.log(flag);
 
   const { messages, status } = useSelector((state) => state.message);
-  console.log(messages);
+  // console.log(messages);
 
   const [show, setShow] = useState(false);
 
@@ -24,42 +31,38 @@ const MeassageList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [updateStatus, setUpdateStatus] = useState(false);
+
+  // console.log(token);
+
   const getMessageList = () => {
     try {
       axios
-        .get("https://dodgeqr.prometteur.in/api/message-list", {
+        .get(`${Base_Url}/message-list`, {
           headers: {
             Authorization: token,
           },
         })
         .then((res) => {
           dispatch(getMessages(res.data));
-          // dispatch(getMessages({status:"Successfully get"}))
         })
         .catch((error) => {
-          console.log(error);
-          navigate("/");
+          navigate("/")
           localStorage.clear();
-          dispatch(getMessages({ status: "Error" }));
+          console.log(error);
         });
     } catch (error) {}
   };
 
   useEffect(() => {
     getMessageList();
-  }, [show]);
+    setUpdateStatus(false);
+  }, [ show ,updateStatus]);
 
   const OnupdateMessage = (id, data) => {
-    // console.log("hello clicked");
-    if (id !== null) {
-      setId(id);
-      setElement(data);
-      setShow(true);
-    } else {
-      setId(null);
-      setElement(null);
-      setShow(true);
-    }
+    setId(id);
+    setElement(data);
+    setShow(true);
   };
 
   const handleNewModal = () => {
@@ -69,20 +72,9 @@ const MeassageList = () => {
   // console.log(messageslist)
 
   const onDelete = (id) => {
-    axios
-      .delete(`https://dodgeqr.prometteur.in/api/message/${id}`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-        navigate("/");
-        localStorage.clear();
-      });
+    RemoveMessage(id);
+    getMessageList();
+    setUpdateStatus(true);
   };
 
   return (
@@ -104,6 +96,8 @@ const MeassageList = () => {
               setShow={setShow}
               id={id}
               element={element}
+              updateStatus={updateStatus}
+              setUpdateStatus={setUpdateStatus}
             />
           </div>
         </div>

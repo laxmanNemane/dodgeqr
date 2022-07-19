@@ -1,6 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import {  createSlice } from "@reduxjs/toolkit";
 
 // export const callPackageList = createAsyncThunk(
 //   "Package/callPackageList",

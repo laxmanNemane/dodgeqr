@@ -6,13 +6,13 @@ import SubcategorySlice from "./SubcategorySlice";
 import userSlice from "./userSlice";
 
 const store = configureStore({
-    reducer: {
-        users: userSlice,
-        message:MessagesSlice ,
-        package:PackageSlice,
-        subCategory:SubcategorySlice,
-        allUser:ManageUsersSlice
-    },
+  reducer: {
+    users: userSlice,
+    message: MessagesSlice,
+    package: PackageSlice,
+    subCategory: SubcategorySlice,
+    allUser: ManageUsersSlice,
+  },
 });
 
 export default store;

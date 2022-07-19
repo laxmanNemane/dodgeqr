@@ -4,6 +4,9 @@ import { AiOutlineClose } from "react-icons/ai";
 import { Checkbox, Modal } from "antd";
 import UserContext from "../../../useContext/Context";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { UpdateAddPackages } from "../../../commen/API";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AddPackages = ({
   managePackage,
@@ -18,51 +21,16 @@ const AddPackages = ({
 
   //geting token from global store
   const { token } = useContext(UserContext);
+  const navigate = useNavigate();
 
-  const handleSubmit = (values) => {
-    console.log(values);
-
-    if (id) {
-      axios
-        .patch(
-          `https://dodgeqr.prometteur.in/api/admin/package/${id}`,
-          values,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        )
-        .then((res) => {
-          // setMessageList([...messageslist, res.data]);
-          console.log(res.data);
-          handleClose();
-        })
-        .catch((err) => {
-          console.log("err", err);
-        });
-    } else {
-      axios
-        .post("https://dodgeqr.prometteur.in/api/admin/package", values, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          // setManagePackage(res.data);
-          console.log(token);
-        })
-        .catch((err) => {
-          console.log(err);
-          console.log(token);
-        });
-      handleClose();
-    }
+  const handleSubmit =  (values) => {
+    // console.log(values);
+     UpdateAddPackages(values, id)
+     
+    handleClose();
   };
 
-  console.log(element);
-
-  // console.log(element.is_message);
+  
 
   return (
     <>

@@ -1,14 +1,12 @@
 import { Button, Spin } from "antd";
-import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { RemoveSubcategory } from "../../commen/API";
 import Index from "../../HOC_Component/Index";
 import { callSubcategoryList } from "../../Redux-toolkit/SubcategorySlice";
-import UserContext from "../../useContext/Context";
 import AddSubcategory from "./PopupBoxes/AddSubcategory";
 
 const SubCategories = () => {
-  const { token } = useContext(UserContext);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -19,30 +17,17 @@ const SubCategories = () => {
   const { subCategoryList, status } = useSelector((state) => state.subCategory);
   // console.log(subCategoryList);
 
+  const [updateStatus, setUpdateStatus] = useState(false);
+
   useEffect(() => {
     dispatch(callSubcategoryList());
-  }, [isModalVisible]);
+    setUpdateStatus(false)
+  }, [isModalVisible ,updateStatus]);
 
   const onDelete = (id) => {
-    if (
-      window.confirm(
-        "Are you sure that tou wanted to delete that categories  record "
-      )
-    ) {
-      axios
-        .delete(`https://dodgeqr.prometteur.in/api/subcategory/${id}`, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          console.log(res.data);
-          // dispatch(callSubcategoryList());
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    RemoveSubcategory(id);
+    dispatch(callSubcategoryList());
+    setUpdateStatus(true)
   };
 
   const onUpdate = (id, data) => {

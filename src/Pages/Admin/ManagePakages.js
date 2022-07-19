@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { RemovePackage } from "../../commen/API";
 import Index from "../../HOC_Component/Index";
 import { getPackages } from "../../Redux-toolkit/PackageSlice";
 import UserContext from "../../useContext/Context";
@@ -21,7 +22,9 @@ const ManagePakages = () => {
 
   const dispatch = useDispatch();
   const { packages, status } = useSelector((state) => state.package);
-  console.log(packages);
+  // console.log(packages);
+
+  const [updateStatus, setUpdateStatus] = useState(false);
 
   const navigate = useNavigate();
 
@@ -46,27 +49,20 @@ const ManagePakages = () => {
   // get packages API
   useEffect(() => {
     callPackageApi();
-  }, [show]);
+    setUpdateStatus(false);
+  }, [show, updateStatus]);
 
   const OnupdateMessage = (id, data) => {
     setId(id);
     setElement(data);
     setShow(true);
+    setUpdateStatus(true)
   };
 
   const onDelete = (id) => {
-    axios
-      .delete(`https://dodgeqr.prometteur.in/api/admin/package/${id}`, {
-        headers: {
-          Authorization: token,
-        },
-      })
-      .then((res) => {
-        // console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    RemovePackage(id);
+    callPackageApi();
+    setUpdateStatus(true)
   };
 
   const handleOpen = () => {

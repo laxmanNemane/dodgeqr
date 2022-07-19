@@ -3,6 +3,9 @@ import UserContext from "../../../useContext/Context";
 import { Field, Form, Formik } from "formik";
 import { useContext, useEffect, useState } from "react";
 import { Modal, Radio, Select } from "antd";
+import { UpdateAddSubcategory } from "../../../commen/API";
+import { useDispatch } from "react-redux";
+import { PostSubcategory } from "../../../Redux-toolkit/SubcategorySlice";
 const { Option } = Select;
 
 const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
@@ -17,6 +20,8 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
   const { token, messageslist, setMessageList } = useContext(UserContext);
   // const [messages, setMessages] = useState([]);
   let children = [];
+
+  const dispatch = useDispatch()
 
   // console.log(messageslist);
 
@@ -58,7 +63,7 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
   };
 
   // console.log(id);
-  console.log(element);
+  // console.log(element);
   let message;
 
   const handleMessages = (e, setFieldValue) => {
@@ -67,40 +72,12 @@ const AddSubcategory = ({ isModalVisible, setIsModalVisible, element, id }) => {
     console.log(e);
   };
 
-  const handleSubmit = (values, action) => {
+  const handleSubmit = (values) => {
     // console.log(values);
-    // values.messages_id = message;
-    if (id) {
-      console.log(values);
-      axios
-        .patch(`https://dodgeqr.prometteur.in/api/subcategory/${id}`, values, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          console.log(res.data);
-          handleCancel();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      console.log(values);
-      axios
-        .post("https://dodgeqr.prometteur.in/api/subcategory", values, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((res) => {
-          handleCancel();
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    
+    UpdateAddSubcategory(values , id)
+    handleCancel();
+ 
   };
 
   // console.log(element.messages_id.map((ele)=>ele._id))

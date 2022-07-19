@@ -11,7 +11,7 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  const disaptch = useDispatch();
+  const dispatch = useDispatch();
 
   const data = useSelector((state) => state.users);
   console.log(data);
@@ -30,18 +30,33 @@ const LoginPage = () => {
     // console.log(user);
     try {
       console.log("before api hit");
-      let result = await axios.post(
-        `https://dodgeqr.prometteur.in/api/admin/login`,
-        user
-      );
-      setAdmin(result.data.user);
-      disaptch(login(result.data));
-      disaptch(login({ token: result.data.token }));
-      localStorage.setItem("token", result.data.token);
-      localStorage.setItem("user", JSON.stringify(result.data.user));
+      if (user.email === "dodgeadmin@yopmail.com") {
+        let result = await axios.post(
+          `https://dodgeqr.prometteur.in/api/admin/login`,
+          user
+        );
+        setAdmin(result.data.user);
+        dispatch(login(result.data));
+        // disaptch(login({ token: result.data.token }));
+        localStorage.setItem("token", result.data.token);
+        localStorage.setItem("user", JSON.stringify(result.data.user));
 
-      console.log(result.data.token);
-      navigate("/dashbord");
+        console.log(result.data.token);
+        navigate("/dashbord");
+      } else {
+        let result = await axios.post(
+          `https://dodgeqr.prometteur.in/api/user/login`,
+          user
+        );
+        setAdmin(result.data.user);
+        dispatch(login({user :result.data}));
+        // disaptch(login({ token: result.data.token }));
+        localStorage.setItem("token", result.data.token);
+        localStorage.setItem("user", JSON.stringify(result.data.user));
+
+        console.log(result.data.token);
+        navigate("/dashbord");
+      }
 
       alert("login Succesfully");
     } catch (error) {

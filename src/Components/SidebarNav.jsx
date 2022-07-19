@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useContext } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { logout } from "../Redux-toolkit/userSlice";
 import UserContext from "../useContext/Context";
@@ -10,27 +10,49 @@ const SidebarNav = () => {
 
   const navigate = useNavigate();
 
+  // console.timeLog("answer time");
+  // console.timeEnd("answer time");
+
   console.log(token)
 
-  const dispatch = useDispatch()
-  const Logout = () => {
-    axios
-      .post("https://dodgeqr.prometteur.in/api/admin/logout", {
-        headers: {
-          Authorization: token,
-        },
-        data: {
-          token,
-        },
-      })
-      .then((res) => {
-        dispatch(logout())
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const data = useSelector((state) => state.users.user);
+  console.log(data);
 
-    localStorage.clear();
+  const dispatch = useDispatch();
+  const Logout = () => {
+    if (data.user.email === "dodgeadmin@yopmail.com") {
+      axios
+        .post("https://dodgeqr.prometteur.in/api/admin/logout", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
+        .then((res) => {
+          if(res.status === 200){
+            dispatch(logout());
+            localStorage.clear();
+          }
+          
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      
+    } else {
+      axios
+        .post("https://dodgeqr.prometteur.in/api/user/logout" , {
+          headers: {
+            Authorization:token,
+          }
+        } )
+        .then((res) => {
+          console.log(" user logout Suucessfully");
+        })
+
+      localStorage.clear();
+    }
+
     navigate("/");
     alert("logout Succesfull");
   };
@@ -40,7 +62,7 @@ const SidebarNav = () => {
       <div className="mx-5 d-flex">
         <div className=" me-auto my-2">
           <h2 className="align-items-center ">
-            Hi, <span>Lakhan Doe</span>
+            Hi, <span></span>
           </h2>
         </div>
         <ul className="list-unstyled">
