@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { logout } from "../Redux-toolkit/userSlice";
 import UserContext from "../useContext/Context";
 
@@ -13,47 +14,50 @@ const SidebarNav = () => {
   // console.timeLog("answer time");
   // console.timeEnd("answer time");
 
-  console.log(token)
+  console.log(token);
 
-  const data = useSelector((state) => state.users.user);
-  console.log(data);
+
+  const {user , isLoggedIn ,Flag} = useSelector(state=>state.users)
+  console.log('User State',user)
+
+
+ 
 
   const dispatch = useDispatch();
   const Logout = () => {
-    if (data.user.email === "dodgeadmin@yopmail.com") {
+    // if (data.user.email === "dodgeadmin@yopmail.com") {
       axios
         .post("https://dodgeqr.prometteur.in/api/admin/logout", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         })
         .then((res) => {
-          if(res.status === 200){
-            dispatch(logout());
-            localStorage.clear();
-          }
-          
+          localStorage.clear()
+          navigate("/")
         })
         .catch((err) => {
           console.log(err);
+          localStorage.clear()
+          navigate("/")
         });
+    // } else {
+      // axios
+      //   .post("https://dodgeqr.prometteur.in/api/user/logout", {
+      //     headers: {
+      //       Authorization: token,
+      //     },
+      //   })
+      //   .then((res) => {
+      //     console.log(" user logout Suucessfully");
+      //     navigate("/");
+      //     localStorage.clear();
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+    // }
 
-      
-    } else {
-      axios
-        .post("https://dodgeqr.prometteur.in/api/user/logout" , {
-          headers: {
-            Authorization:token,
-          }
-        } )
-        .then((res) => {
-          console.log(" user logout Suucessfully");
-        })
-
-      localStorage.clear();
-    }
-
-    navigate("/");
     alert("logout Succesfull");
   };
 
@@ -62,7 +66,7 @@ const SidebarNav = () => {
       <div className="mx-5 d-flex">
         <div className=" me-auto my-2">
           <h2 className="align-items-center ">
-            Hi, <span></span>
+            Hi, <span className="text-warning">{user.user.name}</span>
           </h2>
         </div>
         <ul className="list-unstyled">

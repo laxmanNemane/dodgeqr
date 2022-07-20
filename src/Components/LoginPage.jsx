@@ -55,7 +55,7 @@ const LoginPage = () => {
         localStorage.setItem("user", JSON.stringify(result.data.user));
 
         console.log(result.data.token);
-        navigate("/dashbord");
+        navigate("/u_package");
       }
 
       alert("login Succesfully");

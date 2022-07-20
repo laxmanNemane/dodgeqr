@@ -1,13 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import Index from "../../HOC_Component/Index";
 import SelectCategory from "./UserModel/SelectCategory";
 
 const UserDeviceHistory = () => {
   const [device, setDevice] = useState([]);
   const [show, setShow] = useState(false);
-  const [id , setId] = useState()
-  const [element , setElement] =useState()
+  const [id, setId] = useState();
+  const [element, setElement] = useState();
+  const [updateStatus, setUpdatestatus] = useState(false);
 
   const callDeviceHistory = () => {
     axios
@@ -18,31 +20,43 @@ const UserDeviceHistory = () => {
       })
       .then((res) => {
         setDevice(res.data);
+        // toast.success("successfully linked")
       })
       .catch((error) => {
         // dispatch(getPackages({ status: "Error" }));
         // navigate("/");
         // localStorage.clear();
         console.log("error", error);
+        // toast.error("Failed to linked")
       });
   };
 
   useEffect(() => {
     callDeviceHistory();
-  }, []);
+    setUpdatestatus(true);
+  }, [show, updateStatus]);
 
-  const OnupdateMessage=(id ,data)=>{
-    setId(id)
-    setElement(data)
-    setShow(true)
-    console.log(id)
-  }
+  const OnupdateMessage = (id, data) => {
+    setId(id);
+    setElement(data);
+    setShow(true);
+    console.log(id);
+    setUpdatestatus(true);
+  };
 
   return (
     <div style={{ width: "96%", margin: "auto" }}>
-      <div className="ap-com table-panel ">
+      <div
+        className="ap-com table-panel table-responsive  "
+        height={{ height: "80vh" }}
+      >
         <p>Device History </p>
-        <SelectCategory show={show} setShow={setShow} element={element} id={id} />
+        <SelectCategory
+          show={show}
+          setShow={setShow}
+          element={element}
+          id={id}
+        />
         <table className="table ">
           <thead>
             <tr>
@@ -78,15 +92,13 @@ const UserDeviceHistory = () => {
                         <button
                           className="btn "
                           style={{ border: "1px solid purple" }}
-                          onClick={() =>
-                            OnupdateMessage(ele._id, element)
-                          }
+                          onClick={() => OnupdateMessage(ele._id, element)}
                         >
                           Link Device
                         </button>
                       )}{" "}
                     </td>
-                    <td className="">
+                    {/* <td className="">
                       <div className="action-div dropdown">
                         <button
                           className=""
@@ -101,10 +113,7 @@ const UserDeviceHistory = () => {
                           className="dropdown-menu"
                           aria-labelledby="dropdownMenuButton1"
                         >
-                          <li
-                            className="my-2 mx-2"
-                           
-                          >
+                          <li className="my-2 mx-2">
                             <i className="fas fa-pencil-alt mx-2"></i> Update
                           </li>
                           <li
@@ -115,7 +124,7 @@ const UserDeviceHistory = () => {
                           </li>
                         </ul>
                       </div>
-                    </td>
+                    </td> */}
                   </tr>
                 );
               })}

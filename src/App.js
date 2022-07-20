@@ -16,8 +16,11 @@ import { ToastContainer } from "react-toastify";
 import UserPackages from "./Pages/Users/UserPackages";
 import UserpurchaseHistory from "./Pages/Users/UserpurchaseHistory";
 import UserDeviceHistory from "./Pages/Users/UserDeviceHistory";
+import { useSelector } from "react-redux";
 
 function App() {
+  const { user, isLoggedIn, Flag } = useSelector((state) => state.users);
+  console.log("User State", user);
   return (
     <BrowserRouter>
       <ToastContainer position="top-right" size="20px" autoClose={2000} />
@@ -27,18 +30,28 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forget" element={<ForgetPassword />} />
-        <Route element={<ProtectRoute />}>
-          <Route path="/dashbord" element={<BoxDashbord />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/packages" element={<Packages />} />
-          <Route path="/Admin_Message" element={<Messages />} />
-          <Route path="/Admin_subCategories" element={<Categories />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Route>
-
-        <Route path="/u_package" element={<UserPackages />} />
-        <Route path="/u_purchase_history" element={<UserpurchaseHistory />} />
-        <Route path="/u_device_history" element={<UserDeviceHistory />} />
+        if(user.user.email="dodgeadmin@yopmail.com")
+        {
+          <Route element={<ProtectRoute />}>
+            <Route path="/dashbord" element={<BoxDashbord />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/packages" element={<Packages />} />
+            <Route path="/Admin_Message" element={<Messages />} />
+            <Route path="/Admin_subCategories" element={<Categories />} />
+            <Route path="/profile" element={<ProfilePage />} />
+          </Route>
+        }
+        else
+        {
+          <>
+            <Route path="/u_package" element={<UserPackages />} />
+            <Route
+              path="/u_purchase_history"
+              element={<UserpurchaseHistory />}
+            />
+            <Route path="/u_device_history" element={<UserDeviceHistory />} />
+          </>
+        }
       </Routes>
     </BrowserRouter>
   );

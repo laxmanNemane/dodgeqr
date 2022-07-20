@@ -20,13 +20,11 @@ const AddPackages = ({
   const handleClose = () => setShow(false);
 
   //geting token from global store
-  const { token } = useContext(UserContext);
-  const navigate = useNavigate();
 
   const handleSubmit =  (values) => {
     // console.log(values);
      UpdateAddPackages(values, id)
-     
+  
     handleClose();
   };
 

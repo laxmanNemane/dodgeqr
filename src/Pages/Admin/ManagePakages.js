@@ -152,6 +152,7 @@ const ManagePakages = () => {
                 );
               })}
           </table>
+          
         </div>
       </div>
     </div>

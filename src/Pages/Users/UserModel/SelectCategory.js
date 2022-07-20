@@ -3,10 +3,13 @@ import axios from "axios";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { callSubcategoryList } from "../../../Redux-toolkit/SubcategorySlice";
 
 const SelectCategory = ({ show, setShow, id }) => {
   // const [show , setShow] = useState(false)
+
+  const [value, setValue] = useState();
 
   const dispatch = useDispatch();
   const { subCategoryList, status, deleteRes } = useSelector(
@@ -16,6 +19,7 @@ const SelectCategory = ({ show, setShow, id }) => {
 
   const handleCancel = () => {
     setShow(false);
+    setValue("")
   };
 
   const handleOk = () => {
@@ -26,22 +30,33 @@ const SelectCategory = ({ show, setShow, id }) => {
     console.log("hello");
   };
   const handleMessages = (e) => {
+    
     if (id) {
+      setValue(e.target.value);
       axios
         .patch(
           `https://dodgeqr.prometteur.in/api/user/link_device/${id}`,
-          { device_category: e.target.value },
+          { device_category: value },
           {
             headers: {
               Authorization: localStorage.getItem("token"),
             },
           }
         )
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
+        .then((res) => {
+          console.log(res.data)
+          toast.success("successfully linked subcategory")
+          setValue("")
+        })
+        .catch(
+          (err) => console.log(err),
+          // toast.error("failed to link subcategory")
+        );
     }
-    console.log(e.target.value);
+
+    // console.log(e.target.value);
     handleCancel();
+    setValue("")
   };
 
   useEffect(() => {
@@ -55,6 +70,7 @@ const SelectCategory = ({ show, setShow, id }) => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={false}
+        destroyOnClose={true}
       >
         <Formik
           initialValues={{
